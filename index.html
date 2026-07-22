@@ -471,7 +471,7 @@
 
         .lb-row.my-score {
             background: rgba(0, 188, 212, 0.22);
-            border: 1px solid var(--primary);
+            border: 1.5px solid var(--primary);
         }
 
         .lb-rank {
@@ -672,7 +672,7 @@
 
             <div class="btn-container">
                 <button class="btn btn-gold" id="restart-btn">🔄 PLAY AGAIN</button>
-                <button class="btn btn-outline" id="view-lb-btn">🏆 CHECK DEPARTMENT SCORES</button>
+                <button class="btn btn-outline" id="toggle-dept-btn">🏢 CHECK DEPARTMENT SCORES</button>
             </div>
 
             <!-- Top Department Card -->
@@ -684,16 +684,16 @@
                 <div class="dept-highlight-score" id="gameover-top-dept-score">0 Pts</div>
             </div>
 
-            <!-- Department Team Standings Box -->
+            <!-- Dynamic Leaderboard Section (Toggles between Individual 100+ & Department Team Totals!) -->
             <div class="leaderboard-box" id="leaderboard-section">
                 <div class="leaderboard-header">
-                    <div class="leaderboard-title" id="lb-box-title">
-                        <span>🏢 DEPARTMENT TEAM STANDINGS</span>
+                    <div class="leaderboard-title" id="gameover-lb-title">
+                        <span>🏆 ALL INDIVIDUAL RANKINGS</span>
                     </div>
-                    <div class="sync-badge">Combined Total Points</div>
+                    <div class="sync-badge" id="gameover-lb-badge">Highest Score Down</div>
                 </div>
                 <div class="leaderboard-scroll" id="gameover-leaderboard-list">
-                    <!-- Dynamic Department Total Scores -->
+                    <!-- Dynamic Content -->
                 </div>
             </div>
         </div>
@@ -945,12 +945,13 @@
         let obstacles = [];
         let particles = [];
         let bubbles = [];
+        let isShowingDeptStandings = false; // Game over view mode toggle
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v16";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v17";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -976,6 +977,7 @@
             return getLocalScores();
         }
 
+        // Save Score: Updates player personal best AND accumulates score into Department totals!
         async function saveScore(name, pin, dept, avatar, scoreVal) {
             localStorage.setItem('riyan_saved_player_name', name);
             localStorage.setItem('riyan_saved_player_pin', pin);
@@ -986,6 +988,9 @@
             
             const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
             if (existingIdx !== -1) {
+                // Accumulate total department points contributed by this player!
+                lb[existingIdx].totalDeptScore = (lb[existingIdx].totalDeptScore || lb[existingIdx].score) + scoreVal;
+
                 if (scoreVal > lb[existingIdx].score) {
                     lb[existingIdx].score = scoreVal;
                     lb[existingIdx].dept = dept;
@@ -993,7 +998,7 @@
                     lb[existingIdx].pin = pin;
                 }
             } else {
-                lb.push({ name: name, pin: pin, score: scoreVal, dept: dept, avatar: avatar });
+                lb.push({ name: name, pin: pin, score: scoreVal, totalDeptScore: scoreVal, dept: dept, avatar: avatar });
             }
 
             lb.sort((a, b) => b.score - a.score);
@@ -1020,7 +1025,8 @@
             scores.forEach(entry => {
                 const d = entry.dept || "Design";
                 if (!deptScores[d]) deptScores[d] = 0;
-                deptScores[d] += entry.score;
+                // Sum all accumulated points contributed by all plays in this department!
+                deptScores[d] += (entry.totalDeptScore || entry.score);
             });
 
             let topDept = "Design";
@@ -1045,8 +1051,8 @@
 
         const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
 
-        // Render Individual Top 5 (for Start Screen)
-        async function renderLeaderboard(elementId, currentPlayerName, maxCount = 5) {
+        // Render Individual Top Rankings (sorted from highest score down!)
+        async function renderLeaderboard(elementId, currentPlayerName, maxCount = null) {
             const listEl = document.getElementById(elementId);
             
             let lb = await fetchGlobalScores();
@@ -1087,7 +1093,7 @@
             });
         }
 
-        // Render Department Wise Combined Rankings (for Game Over Screen!)
+        // Render Department Wise Combined Rankings (Every single game score accumulated!)
         async function renderDepartmentLeaderboard(elementId) {
             const listEl = document.getElementById(elementId);
             let lb = await fetchGlobalScores();
@@ -1098,18 +1104,19 @@
                 return;
             }
 
-            // Aggregate combined scores and player count per department
+            // Aggregate EVERY game score accumulated into their department total!
             const deptMap = {};
             lb.forEach(entry => {
                 const d = entry.dept || "Design";
                 if (!deptMap[d]) {
                     deptMap[d] = { name: d, totalScore: 0, playerSet: new Set() };
                 }
-                deptMap[d].totalScore += entry.score;
+                // Adds every played score to the department cumulative total!
+                deptMap[d].totalScore += (entry.totalDeptScore || entry.score);
                 deptMap[d].playerSet.add(entry.name.toLowerCase());
             });
 
-            // Convert to sorted array by combined total score descending
+            // Sort departments by total accumulated score descending
             const deptList = Object.values(deptMap).sort((a, b) => b.totalScore - a.totalScore);
 
             deptList.forEach((dept, idx) => {
@@ -1575,11 +1582,33 @@
             renderLeaderboard('leaderboard-list', null, 5);
         });
 
-        // Check Department Scores Focus Listener
-        document.getElementById('view-lb-btn').addEventListener('click', () => {
+        // Toggle Button: Switch between Individual Rankings & Department Team Standings!
+        document.getElementById('toggle-dept-btn').addEventListener('click', () => {
+            isShowingDeptStandings = !isShowingDeptStandings;
+            updateGameOverLeaderboardView();
+        });
+
+        function updateGameOverLeaderboardView() {
+            const btn = document.getElementById('toggle-dept-btn');
+            const titleEl = document.getElementById('gameover-lb-title');
+            const badgeEl = document.getElementById('gameover-lb-badge');
+            const name = nameInput.value.trim();
+
+            if (isShowingDeptStandings) {
+                btn.innerText = "👤 VIEW INDIVIDUAL SCORES";
+                titleEl.innerHTML = "<span>🏢 DEPARTMENT TEAM STANDINGS</span>";
+                badgeEl.innerText = "Combined Total Points";
+                renderDepartmentLeaderboard('gameover-leaderboard-list');
+            } else {
+                btn.innerText = "🏢 CHECK DEPARTMENT SCORES";
+                titleEl.innerHTML = "<span>🏆 ALL INDIVIDUAL RANKINGS</span>";
+                badgeEl.innerText = "Highest Score Down";
+                renderLeaderboard('gameover-leaderboard-list', name, null);
+            }
+
             const lbEl = document.getElementById('leaderboard-section');
             if (lbEl) lbEl.scrollIntoView({ behavior: 'smooth' });
-        });
+        }
 
         function updateHUD() {
             document.getElementById('hud-score').innerText = score.toLocaleString();
@@ -1621,8 +1650,9 @@
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
-            // Render Department Combined Standings on Game Over screen!
-            renderDepartmentLeaderboard('gameover-leaderboard-list');
+            // Default to Individual Rankings (Highest score down!), can toggle to Department scores via button!
+            isShowingDeptStandings = false;
+            updateGameOverLeaderboardView();
         }
 
         // Game Loop
