@@ -201,6 +201,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            position: relative;
         }
 
         .input-group input {
@@ -224,6 +225,42 @@
             border-color: var(--primary);
             box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
             background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Custom Smart Autocomplete Menu */
+        #dept-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(7, 30, 43, 0.96);
+            border: 1.5px solid var(--primary);
+            border-radius: 12px;
+            margin-top: 4px;
+            max-height: 160px;
+            overflow-y: auto;
+            z-index: 20;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 9px 14px;
+            text-align: left;
+            font-size: 0.88rem;
+            color: #e0f7fa;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: background 0.2s ease;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover, .suggestion-item.active {
+            background: rgba(0, 188, 212, 0.25);
+            color: #ffd700;
         }
 
         .btn-container {
@@ -263,7 +300,7 @@
         }
 
         .btn-gold:hover {
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 12px 25px rgba(255, 215, 0, 0.6);
         }
 
         .btn-outline {
@@ -562,22 +599,16 @@
             </div>
             <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
             <h1 class="game-title">OCEAN QUEST</h1>
-            <p class="subtitle">Type/Select Department • Drag finger or use Arrow keys!</p>
+            <p class="subtitle">Type your Department • Drag finger or use Arrow keys!</p>
 
-            <!-- Clean Input Fields for Name & Department Autocomplete -->
+            <!-- Clean Input Fields for Name & Smart Autocomplete Department -->
             <div class="input-group">
                 <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="20" required>
                 
-                <input type="text" id="player-dept" list="dept-list" placeholder="Type or Select Department..." required>
-                <datalist id="dept-list">
-                    <option value="Architecture & Design"></option>
-                    <option value="Structural & MEP Engineering"></option>
-                    <option value="Project Management"></option>
-                    <option value="Quantity Surveying & Cost"></option>
-                    <option value="Urban Planning & Research"></option>
-                    <option value="Admin & Finance"></option>
-                    <option value="BIM & CAD Team"></option>
-                </datalist>
+                <input type="text" id="player-dept" placeholder="Type Your Department (e.g. Architecture...)" autocomplete="off" required>
+                
+                <!-- Custom Smart Autocomplete Dropdown Popup -->
+                <div id="dept-suggestions"></div>
             </div>
 
             <div class="items-guide">
@@ -738,6 +769,59 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
+        // Department Master List for Smart Autocomplete
+        const knownDepartments = [
+            "Architecture & Design",
+            "Structural & MEP Engineering",
+            "Project Management",
+            "Quantity Surveying & Cost",
+            "Urban Planning & Research",
+            "Admin & Finance",
+            "BIM & CAD Team"
+        ];
+
+        // Custom Smart Autocomplete (Shows ONLY after typing at least 1 character!)
+        const deptInput = document.getElementById('player-dept');
+        const suggestionsBox = document.getElementById('dept-suggestions');
+
+        deptInput.addEventListener('input', () => {
+            const val = deptInput.value.trim().toLowerCase();
+            suggestionsBox.innerHTML = '';
+
+            // ONLY show suggestions after typing 1 or more characters!
+            if (val.length < 1) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            const matches = knownDepartments.filter(d => d.toLowerCase().includes(val));
+
+            if (matches.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            matches.forEach(matchText => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.innerText = matchText;
+                div.addEventListener('click', () => {
+                    deptInput.value = matchText;
+                    suggestionsBox.style.display = 'none';
+                });
+                suggestionsBox.appendChild(div);
+            });
+
+            suggestionsBox.style.display = 'block';
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target !== deptInput && e.target !== suggestionsBox) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
         // Game State
         let gameRunning = false;
         let score = 0;
@@ -827,16 +911,10 @@
             return { name: topDept, score: maxScore };
         }
 
-        function updateDatalistSuggestions(scores) {
-            const datalist = document.getElementById('dept-list');
-            const existingOptions = new Set(Array.from(datalist.options).map(opt => opt.value));
-
+        function updateKnownDepartments(scores) {
             scores.forEach(entry => {
-                if (entry.dept && !existingOptions.has(entry.dept)) {
-                    existingOptions.add(entry.dept);
-                    const opt = document.createElement('option');
-                    opt.value = entry.dept;
-                    datalist.appendChild(opt);
+                if (entry.dept && !knownDepartments.includes(entry.dept)) {
+                    knownDepartments.push(entry.dept);
                 }
             });
         }
@@ -848,7 +926,7 @@
             const lb = await fetchGlobalScores();
             listEl.innerHTML = '';
 
-            updateDatalistSuggestions(lb);
+            updateKnownDepartments(lb);
 
             const topDept = calculateTopDepartment(lb);
             document.getElementById('top-dept-name').innerText = topDept.name;
