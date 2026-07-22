@@ -444,7 +444,7 @@
         }
 
         .leaderboard-scroll {
-            max-height: 130px;
+            max-height: 155px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -643,11 +643,11 @@
                 <div class="dept-highlight-score" id="top-dept-score">0 Pts</div>
             </div>
 
-            <!-- Leaderboard -->
+            <!-- Leaderboard (Start Screen displays TOP 5) -->
             <div class="leaderboard-box">
                 <div class="leaderboard-header">
                     <div class="leaderboard-title">
-                        <span>🏆 OFFICE HALL OF FAME</span>
+                        <span>🏆 TOP 5 LEADERBOARD</span>
                     </div>
                     <div class="sync-controls">
                         <div class="sync-badge" id="sync-status">⚡ Live Global Sync</div>
@@ -655,7 +655,7 @@
                     </div>
                 </div>
                 <div class="leaderboard-scroll" id="leaderboard-list">
-                    <!-- Dynamic Leaderboard -->
+                    <!-- Dynamic Top 5 -->
                 </div>
             </div>
         </div>
@@ -672,7 +672,7 @@
 
             <div class="btn-container">
                 <button class="btn btn-gold" id="restart-btn">🔄 PLAY AGAIN</button>
-                <button class="btn btn-outline" id="view-lb-btn">🏆 CHECK BEST SCORES</button>
+                <button class="btn btn-outline" id="view-lb-btn">🏆 VIEW FULL RANKINGS (100+)</button>
             </div>
 
             <!-- Top Department Card -->
@@ -684,16 +684,16 @@
                 <div class="dept-highlight-score" id="gameover-top-dept-score">0 Pts</div>
             </div>
 
-            <!-- Leaderboard -->
+            <!-- Leaderboard (Game Over Screen displays ALL RANKINGS 100+) -->
             <div class="leaderboard-box" id="leaderboard-section">
                 <div class="leaderboard-header">
                     <div class="leaderboard-title">
-                        <span>🏆 LEADERBOARD RANKINGS</span>
+                        <span>🏆 ALL OFFICE RANKINGS (100+ PLAYERS)</span>
                     </div>
-                    <div class="sync-badge">Top Office Scores</div>
+                    <div class="sync-badge">Live Office Ranks</div>
                 </div>
                 <div class="leaderboard-scroll" id="gameover-leaderboard-list">
-                    <!-- Dynamic Leaderboard -->
+                    <!-- Dynamic All Rankings (100+) -->
                 </div>
             </div>
         </div>
@@ -950,7 +950,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v14";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v15";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -997,7 +997,7 @@
             }
 
             lb.sort((a, b) => b.score - a.score);
-            lb = lb.slice(0, 30);
+            lb = lb.slice(0, 200); // Stores up to 200 players!
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lb));
 
@@ -1034,7 +1034,6 @@
             return { name: topDept, score: maxScore };
         }
 
-        // Dynamically add new custom typed departments into auto-suggest list!
         function updateKnownDepartments(scores) {
             if (!scores) return;
             scores.forEach(entry => {
@@ -1046,10 +1045,11 @@
 
         const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
 
-        async function renderLeaderboard(elementId, currentPlayerName) {
+        // Render Leaderboard with custom maxCount (e.g. 5 for Start Screen, All 100+ for Game Over!)
+        async function renderLeaderboard(elementId, currentPlayerName, maxCount = null) {
             const listEl = document.getElementById(elementId);
             
-            const lb = await fetchGlobalScores();
+            let lb = await fetchGlobalScores();
             listEl.innerHTML = '';
 
             updateKnownDepartments(lb);
@@ -1065,7 +1065,9 @@
                 return;
             }
 
-            lb.forEach((entry, idx) => {
+            const displayList = maxCount ? lb.slice(0, maxCount) : lb;
+
+            displayList.forEach((entry, idx) => {
                 const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
                 const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
                 const deptLabel = entry.dept ? entry.dept : 'Team Riyan';
@@ -1085,18 +1087,19 @@
             });
         }
 
-        renderLeaderboard('leaderboard-list');
+        // Render Start Screen with TOP 5
+        renderLeaderboard('leaderboard-list', null, 5);
 
-        // Auto-refresh Leaderboard every 5 seconds so scores update live across all devices!
+        // Auto-refresh Leaderboard every 5 seconds
         setInterval(() => {
             if (!gameRunning) {
-                renderLeaderboard('leaderboard-list');
+                renderLeaderboard('leaderboard-list', null, 5);
             }
         }, 5000);
 
         // Manual refresh button listener
         document.getElementById('manual-refresh-btn').addEventListener('click', () => {
-            renderLeaderboard('leaderboard-list');
+            renderLeaderboard('leaderboard-list', null, 5);
         });
 
         // HUMAN SWIMMER CHARACTER WITH CUSTOM AVATAR FACE
@@ -1447,7 +1450,7 @@
             playerObj.targetY = e.clientY - rect.top - 18;
         });
 
-        // Mobile Touch Listeners (Smooth Drag!)
+        // Mobile Touch Listeners
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1499,7 +1502,6 @@
                 return;
             }
 
-            // Register custom typed department into suggestions!
             if (deptVal && !knownDepartments.some(d => d.toLowerCase() === deptVal.toLowerCase())) {
                 knownDepartments.push(deptVal);
             }
@@ -1527,10 +1529,10 @@
         document.getElementById('restart-btn').addEventListener('click', () => {
             document.getElementById('gameover-screen').classList.add('hidden');
             document.getElementById('start-screen').classList.remove('hidden');
-            renderLeaderboard('leaderboard-list');
+            renderLeaderboard('leaderboard-list', null, 5);
         });
 
-        // View Leaderboard Focus Listener
+        // View Full Rankings Focus Listener
         document.getElementById('view-lb-btn').addEventListener('click', () => {
             const lbEl = document.getElementById('leaderboard-section');
             if (lbEl) lbEl.scrollIntoView({ behavior: 'smooth' });
@@ -1576,7 +1578,8 @@
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
-            renderLeaderboard('gameover-leaderboard-list', name);
+            // Game over screen displays ALL RANKINGS (100+ players!)
+            renderLeaderboard('gameover-leaderboard-list', name, null);
         }
 
         // Game Loop
