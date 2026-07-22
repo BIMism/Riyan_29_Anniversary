@@ -534,39 +534,6 @@
             transform: translate(-50%, -50%) scale(1.2);
         }
 
-        /* Mobile D-Pad & Touch Guide */
-        #mobile-controls {
-            position: absolute;
-            bottom: 12px;
-            left: 12px;
-            display: none;
-            z-index: 5;
-        }
-
-        .d-pad {
-            display: grid;
-            grid-template-columns: repeat(3, 40px);
-            grid-template-rows: repeat(2, 40px);
-            gap: 4px;
-        }
-
-        .d-btn {
-            background: rgba(0, 188, 212, 0.4);
-            border: 1px solid var(--primary);
-            border-radius: 10px;
-            color: white;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-            touch-action: manipulation;
-        }
-
-        .d-btn:active {
-            background: var(--primary);
-        }
-
         @media (max-width: 768px) {
             #game-wrapper {
                 height: 98vh;
@@ -574,7 +541,6 @@
             }
             .logo-text { font-size: 1.5rem; }
             h1.game-title { font-size: 1.5rem; }
-            #mobile-controls { display: flex; }
         }
     </style>
 </head>
@@ -598,18 +564,6 @@
 
         <!-- Level Flare Animation -->
         <div id="level-flare">LEVEL UP! 🚀</div>
-
-        <!-- Mobile D-Pad -->
-        <div id="mobile-controls">
-            <div class="d-pad">
-                <div></div>
-                <div class="d-btn" id="btn-up">▲</div>
-                <div></div>
-                <div class="d-btn" id="btn-left">◀</div>
-                <div class="d-btn" id="btn-down">▼</div>
-                <div class="d-btn" id="btn-right">▶</div>
-            </div>
-        </div>
 
         <!-- START SCREEN -->
         <div id="start-screen" class="overlay-screen">
@@ -963,9 +917,9 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        // 100% RELIABLE PUBLIC CLOUD REST ENDPOINT (kvdb.io - Guaranteed Zero CORS, GET & POST!)
-        const PRIMARY_SYNC_URL = "https://kvdb.io/4WvD7N8S9pL2kX1m/riyan_29th_global_lb_v10";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v10";
+        // PERMANENT PUBLIC JSONBLOB ENDPOINT (Full CORS support for cross-device live sync!)
+        const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v12";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -974,8 +928,10 @@
 
         async function fetchGlobalScores() {
             try {
-                // Fetch with cache-busting timestamp for guaranteed live sync across all devices!
-                const res = await fetch(PRIMARY_SYNC_URL + '?t=' + Date.now());
+                const res = await fetch(JSONBLOB_URL + '?t=' + Date.now(), {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data)) {
@@ -1015,9 +971,9 @@
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lb));
 
             try {
-                await fetch(PRIMARY_SYNC_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                await fetch(JSONBLOB_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify(lb)
                 });
             } catch (e) {
@@ -1098,12 +1054,12 @@
 
         renderLeaderboard('leaderboard-list');
 
-        // Auto-refresh Leaderboard every 8 seconds so scores update live across all devices!
+        // Auto-refresh Leaderboard every 5 seconds so scores update live across all devices!
         setInterval(() => {
             if (!gameRunning) {
                 renderLeaderboard('leaderboard-list');
             }
-        }, 8000);
+        }, 5000);
 
         // Manual refresh button listener
         document.getElementById('manual-refresh-btn').addEventListener('click', () => {
@@ -1185,13 +1141,11 @@
                 ctx.fillText("29th", 16, 8);
 
                 // --- 3. CUSTOM AVATAR FACE & HEADGEAR ---
-                // Head Skin
                 ctx.fillStyle = this.avatar === 'female' ? '#ffe0b2' : '#ffcc80';
                 ctx.beginPath();
                 ctx.arc(42, 16, 8, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Custom Hair / Headgear per Avatar
                 if (this.avatar === 'female') {
                     ctx.fillStyle = "#ffee58";
                     ctx.beginPath();
@@ -1226,7 +1180,6 @@
                     ctx.fill();
                 }
 
-                // Eye / Goggles / Sunglasses
                 if (this.avatar === 'cool') {
                     ctx.fillStyle = "#000";
                     ctx.beginPath();
@@ -1461,7 +1414,7 @@
             playerObj.targetY = e.clientY - rect.top - 18;
         });
 
-        // Mobile Touch Listeners
+        // Mobile Touch Listeners (Smooth Drag!)
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1488,18 +1441,6 @@
             if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.Left = false;
             if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.Right = false;
         });
-
-        function bindTouchBtn(btnId, keyName) {
-            const btn = document.getElementById(btnId);
-            btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[keyName] = true; });
-            btn.addEventListener('touchend', (e) => { e.preventDefault(); keys[keyName] = false; });
-            btn.addEventListener('mousedown', () => { keys[keyName] = true; });
-            btn.addEventListener('mouseup', () => { keys[keyName] = false; });
-        }
-        bindTouchBtn('btn-up', 'Up');
-        bindTouchBtn('btn-down', 'Down');
-        bindTouchBtn('btn-left', 'Left');
-        bindTouchBtn('btn-right', 'Right');
 
         // Start Game Listener with Unique Username & 4-Digit PIN Security
         document.getElementById('start-btn').addEventListener('click', async () => {
