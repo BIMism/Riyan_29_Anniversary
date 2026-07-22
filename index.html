@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Riyan 29th Anniversary - Ocean Quest</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
             --accent: #ffd700;
             --accent-glow: rgba(255, 215, 0, 0.45);
             --bg-dark: #051923;
-            --glass-bg: rgba(5, 20, 30, 0.94);
+            --glass-bg: rgba(5, 20, 30, 0.95);
             --glass-border: rgba(0, 188, 212, 0.38);
             --text-light: #f0f9ff;
         }
@@ -76,7 +76,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 18px 16px;
+            padding: 16px 14px;
             text-align: center;
             z-index: 10;
             overflow-y: auto;
@@ -92,27 +92,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 2px;
         }
 
         .logo-emblem {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             background: linear-gradient(135deg, #00bcd4, #005662);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #fff;
             box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
             border: 1.5px solid #80deea;
         }
 
         .logo-text {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 900;
             letter-spacing: 3px;
             background: linear-gradient(135deg, #ffffff 0%, #00bcd4 100%);
@@ -125,11 +125,11 @@
             background: linear-gradient(135deg, #ffd700, #ff9800);
             color: #051923;
             font-weight: 800;
-            font-size: 0.76rem;
-            padding: 3px 14px;
+            font-size: 0.74rem;
+            padding: 3px 12px;
             border-radius: 20px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             box-shadow: 0 0 15px var(--accent-glow);
             margin-bottom: 4px;
             animation: pulse 2s infinite;
@@ -141,7 +141,7 @@
         }
 
         h1.game-title {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 900;
             background: linear-gradient(135deg, #ffffff 0%, #80deea 100%);
             -webkit-background-clip: text;
@@ -151,14 +151,14 @@
         }
 
         .subtitle {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #b2ebf2;
             margin-bottom: 6px;
         }
 
         /* Avatar Selection Grid */
         .avatar-section-title {
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             font-weight: 800;
             color: #ffd700;
             text-transform: uppercase;
@@ -174,15 +174,15 @@
         }
 
         .avatar-card {
-            width: 46px;
-            height: 46px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.08);
             border: 2px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -203,21 +203,21 @@
         .controls-guide-card {
             background: rgba(0, 188, 212, 0.12);
             border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 6px 12px;
+            border-radius: 12px;
+            padding: 5px 10px;
             width: 100%;
             max-width: 480px;
             margin-bottom: 6px;
             display: flex;
             justify-content: space-around;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: #b2ebf2;
         }
 
         .controls-guide-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             font-weight: 600;
         }
 
@@ -226,15 +226,63 @@
             font-weight: 800;
         }
 
+        /* Game Rules & Items Legend Card */
+        .rules-legend-card {
+            background: rgba(5, 30, 45, 0.85);
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            border-radius: 12px;
+            padding: 6px 10px;
+            width: 100%;
+            max-width: 480px;
+            margin-bottom: 6px;
+            font-size: 0.73rem;
+            text-align: left;
+        }
+
+        .rules-legend-title {
+            color: #ffd700;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 10px;
+        }
+
+        .rule-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #e0f7fa;
+        }
+
+        .rule-row span.badge-pts {
+            color: #ffd700;
+            font-weight: 800;
+            margin-left: auto;
+        }
+
+        .rule-row span.badge-danger {
+            color: #ff5252;
+            font-weight: 800;
+            margin-left: auto;
+        }
+
         /* Highlighted Top Department Banner */
         .dept-highlight-card {
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.25));
             border: 1.5px solid #ffd700;
-            border-radius: 14px;
+            border-radius: 12px;
             padding: 6px 12px;
             width: 100%;
             max-width: 480px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -246,7 +294,7 @@
         }
 
         .dept-highlight-title {
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             color: #ffd700;
             font-weight: 800;
             text-transform: uppercase;
@@ -254,20 +302,20 @@
         }
 
         .dept-highlight-name {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 800;
             color: #fff;
         }
 
         .dept-highlight-score {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 900;
             color: #ffd700;
         }
 
-        /* Inputs & Buttons */
+        /* Inputs & Buttons - Mobile Responsive Cutoff Prevention */
         .input-group {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             width: 100%;
             max-width: 480px;
             display: flex;
@@ -283,22 +331,35 @@
         }
 
         .input-group input {
-            padding: 9px 14px;
+            padding: 8px 10px;
             border-radius: 12px;
             border: 2px solid var(--glass-border);
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             outline: none;
             transition: all 0.3s ease;
             text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        #player-name { flex: 2; }
-        #player-pin { flex: 1; }
+        /* Fixed PIN width & text padding so passwords never cut off on mobile screens! */
+        #player-name {
+            flex: 1.6;
+            min-width: 0;
+        }
+        #player-pin {
+            flex: 1;
+            min-width: 80px;
+            letter-spacing: 2px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 8px 6px;
+        }
 
         .input-group input::placeholder {
             color: #80deea;
+            letter-spacing: normal;
         }
 
         .input-group input:focus {
@@ -348,16 +409,16 @@
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 6px 0;
+            margin: 4px 0;
             z-index: 2;
         }
 
         .btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            padding: 10px 24px;
+            padding: 9px 22px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -387,10 +448,10 @@
         .leaderboard-box {
             background: rgba(5, 22, 33, 0.88);
             border: 1.5px solid var(--glass-border);
-            border-radius: 16px;
+            border-radius: 14px;
             width: 100%;
             max-width: 480px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             margin-top: 4px;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
         }
@@ -405,7 +466,7 @@
         }
 
         .leaderboard-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 800;
             color: var(--accent);
             display: flex;
@@ -420,7 +481,7 @@
         }
 
         .sync-badge {
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             background: rgba(0, 188, 212, 0.2);
             color: #80deea;
             padding: 2px 7px;
@@ -429,7 +490,7 @@
         }
 
         .refresh-btn-icon {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             cursor: pointer;
             color: #ffd700;
             background: rgba(255, 215, 0, 0.15);
@@ -444,7 +505,7 @@
         }
 
         .leaderboard-scroll {
-            max-height: 155px;
+            max-height: 135px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -464,7 +525,7 @@
             align-items: center;
             padding: 5px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             border-radius: 8px;
             margin-bottom: 3px;
         }
@@ -499,7 +560,7 @@
         }
 
         .lb-meta {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: #80deea;
             display: block;
         }
@@ -507,33 +568,34 @@
         .lb-score {
             font-weight: 800;
             color: var(--accent);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
         }
 
-        /* HUD */
+        /* Responsive HUD Top Position (Prevents Cutoff under Mobile Browser Address Bar!) */
         #hud {
             position: absolute;
-            top: 12px;
-            left: 15px;
-            right: 15px;
+            top: 25px; /* Down from top edge so address bar never blocks it! */
+            left: 10px;
+            right: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 5;
+            z-index: 25;
             pointer-events: none;
         }
 
         .hud-card {
-            background: rgba(5, 25, 35, 0.82);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.92rem;
-            font-weight: 700;
+            background: rgba(5, 25, 35, 0.92);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid var(--glass-border);
+            padding: 5px 10px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
         .hud-card span {
@@ -546,7 +608,7 @@
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.5);
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             font-weight: 900;
             color: #ffd700;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
@@ -563,11 +625,14 @@
 
         @media (max-width: 768px) {
             #game-wrapper {
-                height: 98vh;
+                height: 99vh;
                 border-radius: 12px;
             }
-            .logo-text { font-size: 1.5rem; }
-            h1.game-title { font-size: 1.5rem; }
+            .logo-text { font-size: 1.4rem; }
+            h1.game-title { font-size: 1.4rem; }
+            #hud { top: 32px; } /* Extra clearance for mobile browser bar */
+            .hud-card { font-size: 0.78rem; padding: 4px 8px; }
+            .rules-grid { grid-template-columns: 1fr; gap: 2px; }
         }
     </style>
 </head>
@@ -576,7 +641,7 @@
     <div id="game-wrapper">
         <canvas id="gameCanvas"></canvas>
 
-        <!-- HUD -->
+        <!-- HUD (Clearance for Mobile Address Bar!) -->
         <div id="hud" class="hidden">
             <div class="hud-card">
                 🏆 Score: <span id="hud-score">0</span>
@@ -618,11 +683,26 @@
                 <div class="controls-guide-item">📱 <span>Mobile:</span> Touch & Drag Finger</div>
             </div>
 
+            <!-- Game Rules & Items Guide -->
+            <div class="rules-legend-card">
+                <div class="rules-legend-title">🌊 OCEAN GUIDE: ITEMS & DANGERS</div>
+                <div class="rules-grid">
+                    <div class="rule-row">📏 Ruler <span class="badge-pts">+100 Pts</span></div>
+                    <div class="rule-row">🪼 Jellyfish / 🍾 Bottle <span class="badge-danger">-1 Life</span></div>
+                    <div class="rule-row">🏢 Blueprint <span class="badge-pts">+150 Pts</span></div>
+                    <div class="rule-row">🐙 Octopus / 🐡 Puffer <span class="badge-danger">-1 Life</span></div>
+                    <div class="rule-row">🛡️ ISO Shield <span class="badge-pts">+200 Pts & Aura</span></div>
+                    <div class="rule-row">🦈 Shark <span class="badge-danger">-1 Life</span></div>
+                    <div class="rule-row">🎂 29th Cake <span class="badge-pts">+500 Pts</span></div>
+                    <div class="rule-row">🏆 Level 29 <span class="badge-pts">Champion</span></div>
+                </div>
+            </div>
+
             <!-- Profile Inputs: Username + 4-digit PIN + Department -->
             <div class="input-group">
                 <div class="input-row">
-                    <input type="text" id="player-name" placeholder="Enter Username..." maxlength="20" spellcheck="false" autocomplete="off" required>
-                    <input type="password" id="player-pin" placeholder="4-Digit PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric" required>
+                    <input type="text" id="player-name" placeholder="Username..." maxlength="20" spellcheck="false" autocomplete="off" required>
+                    <input type="password" id="player-pin" placeholder="PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric" required>
                 </div>
                 
                 <input type="text" id="player-dept" placeholder="Type or Select Department..." spellcheck="false" autocomplete="off" required>
@@ -945,13 +1025,13 @@
         let obstacles = [];
         let particles = [];
         let bubbles = [];
-        let isShowingDeptStandings = false; // Game over view mode toggle
+        let isShowingDeptStandings = false;
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v17";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v18";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -977,7 +1057,7 @@
             return getLocalScores();
         }
 
-        // Save Score: Updates player personal best AND accumulates score into Department totals!
+        // Save Score: Updates personal high score AND adds points to Department cumulative totals!
         async function saveScore(name, pin, dept, avatar, scoreVal) {
             localStorage.setItem('riyan_saved_player_name', name);
             localStorage.setItem('riyan_saved_player_pin', pin);
@@ -988,7 +1068,6 @@
             
             const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
             if (existingIdx !== -1) {
-                // Accumulate total department points contributed by this player!
                 lb[existingIdx].totalDeptScore = (lb[existingIdx].totalDeptScore || lb[existingIdx].score) + scoreVal;
 
                 if (scoreVal > lb[existingIdx].score) {
@@ -1025,7 +1104,6 @@
             scores.forEach(entry => {
                 const d = entry.dept || "Design";
                 if (!deptScores[d]) deptScores[d] = 0;
-                // Sum all accumulated points contributed by all plays in this department!
                 deptScores[d] += (entry.totalDeptScore || entry.score);
             });
 
@@ -1051,7 +1129,7 @@
 
         const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
 
-        // Render Individual Top Rankings (sorted from highest score down!)
+        // Render Individual Leaderboard
         async function renderLeaderboard(elementId, currentPlayerName, maxCount = null) {
             const listEl = document.getElementById(elementId);
             
@@ -1093,7 +1171,7 @@
             });
         }
 
-        // Render Department Wise Combined Rankings (Every single game score accumulated!)
+        // Render Department Wise Cumulative Totals
         async function renderDepartmentLeaderboard(elementId) {
             const listEl = document.getElementById(elementId);
             let lb = await fetchGlobalScores();
@@ -1104,19 +1182,16 @@
                 return;
             }
 
-            // Aggregate EVERY game score accumulated into their department total!
             const deptMap = {};
             lb.forEach(entry => {
                 const d = entry.dept || "Design";
                 if (!deptMap[d]) {
                     deptMap[d] = { name: d, totalScore: 0, playerSet: new Set() };
                 }
-                // Adds every played score to the department cumulative total!
                 deptMap[d].totalScore += (entry.totalDeptScore || entry.score);
                 deptMap[d].playerSet.add(entry.name.toLowerCase());
             });
 
-            // Sort departments by total accumulated score descending
             const deptList = Object.values(deptMap).sort((a, b) => b.totalScore - a.totalScore);
 
             deptList.forEach((dept, idx) => {
@@ -1355,7 +1430,7 @@
             }
         }
 
-        // Obstacle Class
+        // Expanded Sea Creatures & Obstacles Class (Jellyfish, Shark, Plastic, Octopus, Pufferfish!)
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
@@ -1365,9 +1440,9 @@
                 const speedMultiplier = 1 + (level * 0.28);
                 this.speed = (Math.random() * 2 + 3.8) * speedMultiplier;
 
-                const obsTypes = ['jellyfish', 'shark', 'plastic'];
+                const obsTypes = ['jellyfish', 'shark', 'plastic', 'octopus', 'pufferfish'];
                 this.type = obsTypes[Math.floor(Math.random() * obsTypes.length)];
-                this.width = this.type === 'shark' ? 65 : 35;
+                this.width = this.type === 'shark' ? 65 : this.type === 'octopus' ? 45 : 35;
                 this.height = 35;
             }
 
@@ -1376,6 +1451,10 @@
 
                 if (this.type === 'jellyfish' && level >= 3) {
                     this.y = this.initialY + Math.sin(frameCount * 0.1 + this.x * 0.05) * 45;
+                }
+
+                if (this.type === 'octopus') {
+                    this.y = this.initialY + Math.cos(frameCount * 0.12) * 30;
                 }
 
                 if (this.type === 'shark' && level >= 4) {
@@ -1426,6 +1505,47 @@
                     ctx.beginPath();
                     ctx.arc(12, 14, 2, 0, Math.PI * 2);
                     ctx.fill();
+                } else if (this.type === 'octopus') {
+                    ctx.fillStyle = "#ab47bc";
+                    ctx.beginPath();
+                    ctx.arc(20, 15, 14, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = "#fff";
+                    ctx.beginPath();
+                    ctx.arc(15, 12, 4, 0, Math.PI * 2);
+                    ctx.arc(25, 12, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = "#000";
+                    ctx.beginPath();
+                    ctx.arc(15, 12, 2, 0, Math.PI * 2);
+                    ctx.arc(25, 12, 2, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = "#ab47bc";
+                    ctx.lineWidth = 3;
+                    for (let i = 0; i < 6; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(8 + i * 5, 26);
+                        ctx.lineTo(6 + i * 5 + Math.sin(frameCount * 0.2 + i) * 5, 40);
+                        ctx.stroke();
+                    }
+                } else if (this.type === 'pufferfish') {
+                    const puff = Math.abs(Math.sin(frameCount * 0.1)) * 5;
+                    ctx.fillStyle = "#ffb74d";
+                    ctx.beginPath();
+                    ctx.arc(18, 18, 13 + puff, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = "#e65100";
+                    for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+                        const px = 18 + Math.cos(a) * (14 + puff);
+                        const py = 18 + Math.sin(a) * (14 + puff);
+                        ctx.beginPath();
+                        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
                 } else {
                     ctx.font = "24px sans-serif";
                     ctx.fillText("🍾", 10, 20);
@@ -1650,7 +1770,6 @@
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
-            // Default to Individual Rankings (Highest score down!), can toggle to Department scores via button!
             isShowingDeptStandings = false;
             updateGameOverLeaderboardView();
         }
