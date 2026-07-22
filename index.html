@@ -265,19 +265,19 @@
 
         .btn-container {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 8px 0;
+            margin: 10px 0;
             z-index: 2;
         }
 
         .btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            padding: 10px 24px;
+            padding: 11px 28px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -301,18 +301,6 @@
 
         .btn-gold:hover {
             box-shadow: 0 12px 25px rgba(255, 215, 0, 0.6);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: #80deea;
-            box-shadow: none;
-        }
-
-        .btn-outline:hover {
-            background: rgba(0, 188, 212, 0.15);
-            color: #fff;
         }
 
         /* Leaderboard Box */
@@ -491,29 +479,6 @@
             gap: 4px;
         }
 
-        /* Toast notification */
-        #toast {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2e7d32;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            z-index: 25;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            font-size: 0.9rem;
-        }
-
-        #toast.show {
-            opacity: 1;
-        }
-
         /* Mobile D-Pad & Touch Guide */
         #mobile-controls {
             position: absolute;
@@ -607,7 +572,6 @@
                 
                 <input type="text" id="player-dept" placeholder="Type Your Department (e.g. Architecture...)" autocomplete="off" required>
                 
-                <!-- Custom Smart Autocomplete Dropdown Popup -->
                 <div id="dept-suggestions"></div>
             </div>
 
@@ -656,9 +620,8 @@
             <p class="subtitle" id="gameover-msg">Great effort for Riyan 29th Anniversary!</p>
 
             <div class="btn-container">
-                <button class="btn" id="restart-btn">🔄 PLAY AGAIN</button>
-                <button class="btn btn-gold" id="share-btn">📋 COPY SCORE</button>
-                <button class="btn btn-outline" id="email-btn">✉️ EMAIL SCORE</button>
+                <button class="btn btn-gold" id="restart-btn">🔄 PLAY AGAIN</button>
+                <button class="btn btn-outline" id="view-lb-btn">🏆 CHECK BEST SCORES</button>
             </div>
 
             <!-- Top Department Card -->
@@ -671,7 +634,7 @@
             </div>
 
             <!-- Leaderboard -->
-            <div class="leaderboard-box">
+            <div class="leaderboard-box" id="leaderboard-section">
                 <div class="leaderboard-header">
                     <div class="leaderboard-title">
                         <span>🏆 LEADERBOARD RANKINGS</span>
@@ -683,9 +646,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Toast notification -->
-        <div id="toast">Score Copied to Clipboard! Ready to paste in Email/Slack! 🚀</div>
     </div>
 
     <script>
@@ -780,7 +740,6 @@
             "BIM & CAD Team"
         ];
 
-        // Custom Smart Autocomplete (Shows ONLY after typing at least 1 character!)
         const deptInput = document.getElementById('player-dept');
         const suggestionsBox = document.getElementById('dept-suggestions');
 
@@ -788,7 +747,6 @@
             const val = deptInput.value.trim().toLowerCase();
             suggestionsBox.innerHTML = '';
 
-            // ONLY show suggestions after typing 1 or more characters!
             if (val.length < 1) {
                 suggestionsBox.style.display = 'none';
                 return;
@@ -815,7 +773,6 @@
             suggestionsBox.style.display = 'block';
         });
 
-        // Hide suggestions when clicking outside
         document.addEventListener('click', (e) => {
             if (e.target !== deptInput && e.target !== suggestionsBox) {
                 suggestionsBox.style.display = 'none';
@@ -960,32 +917,33 @@
 
         renderLeaderboard('leaderboard-list');
 
-        // Player Class
+        // Player Class (Allows full top to bottom movement!)
         class Player {
             constructor() {
                 this.x = 80;
                 this.y = canvas.height / 2;
                 this.width = 50;
                 this.height = 35;
-                this.speed = 7;
+                this.speed = 7.5;
                 this.targetX = this.x;
                 this.targetY = this.y;
                 this.shieldTime = 0;
             }
 
             update() {
-                if (keys.Up && this.y > 20) this.y -= this.speed;
-                if (keys.Down && this.y < canvas.height - this.height - 20) this.y += this.speed;
-                if (keys.Left && this.x > 20) this.x -= this.speed;
-                if (keys.Right && this.x < canvas.width - this.width - 20) this.x += this.speed;
+                if (keys.Up && this.y > 0) this.y -= this.speed;
+                if (keys.Down && this.y < canvas.height - this.height) this.y += this.speed;
+                if (keys.Left && this.x > 0) this.x -= this.speed;
+                if (keys.Right && this.x < canvas.width - this.width) this.x += this.speed;
 
                 if (this.targetY !== undefined) {
-                    this.y += (this.targetY - this.y) * 0.25;
-                    this.x += (this.targetX - this.x) * 0.25;
+                    this.y += (this.targetY - this.y) * 0.28;
+                    this.x += (this.targetX - this.x) * 0.28;
                 }
 
-                this.x = Math.max(15, Math.min(canvas.width - 60, this.x));
-                this.y = Math.max(15, Math.min(canvas.height - 50, this.y));
+                // Full edge-to-edge boundary clamping!
+                this.x = Math.max(0, Math.min(canvas.width - this.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height - this.height, this.y));
 
                 if (this.shieldTime > 0) this.shieldTime--;
             }
@@ -1048,7 +1006,7 @@
         class Item {
             constructor() {
                 this.x = canvas.width + 30;
-                this.y = Math.random() * (canvas.height - 120) + 40;
+                this.y = Math.random() * (canvas.height - 80) + 20;
                 this.speed = Math.random() * 2 + 3 + (level * 0.4);
 
                 const types = [
@@ -1090,7 +1048,7 @@
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
-                this.y = Math.random() * (canvas.height - 140) + 50;
+                this.y = Math.random() * (canvas.height - 100) + 30;
                 this.initialY = this.y;
                 
                 const speedMultiplier = 1 + (level * 0.28);
@@ -1223,7 +1181,7 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // Direct Mobile Touch & Drag Listeners
+        // Direct Mobile Touch & Drag Listeners (Full Canvas Range)
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1296,33 +1254,11 @@
             renderLeaderboard('leaderboard-list');
         });
 
-        // Copy Score Listener
-        document.getElementById('share-btn').addEventListener('click', () => {
-            const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
-            const dept = document.getElementById('player-dept').value || "Architecture & Design";
-            const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name}\n🏬 Dept: ${dept}\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                showToast("Score Copied to Clipboard! Ready to paste in Email/Slack! 🚀");
-            });
+        // View Leaderboard Focus Listener
+        document.getElementById('view-lb-btn').addEventListener('click', () => {
+            const lbEl = document.getElementById('leaderboard-section');
+            if (lbEl) lbEl.scrollIntoView({ behavior: 'smooth' });
         });
-
-        // Direct Email Score Listener
-        document.getElementById('email-btn').addEventListener('click', () => {
-            const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
-            const dept = document.getElementById('player-dept').value || "Architecture & Design";
-            const subject = encodeURIComponent(`🏆 My Riyan 29th Anniversary Score: ${score.toLocaleString()} Pts - ${name}`);
-            const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏬 Department: ${dept}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
-            
-            window.location.href = `mailto:?subject=${subject}&body=${body}`;
-        });
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
 
         function updateHUD() {
             document.getElementById('hud-score').innerText = score.toLocaleString();
