@@ -603,7 +603,7 @@
                     <div class="leaderboard-title">
                         <span>🏆 OFFICE HALL OF FAME</span>
                     </div>
-                    <div class="sync-badge" id="sync-status">⚡ Live Sync</div>
+                    <div class="sync-badge" id="sync-status">⚡ Live Global Sync</div>
                 </div>
                 <div class="leaderboard-scroll" id="leaderboard-list">
                     <!-- Dynamic Leaderboard -->
@@ -651,7 +651,7 @@
     </div>
 
     <script>
-        // Web Audio Synthesizer (Background Ocean Music, Cheerful Level Up & Sad Game Over Melody)
+        // Web Audio Synthesizer
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
         let bgMusicTimer = null;
@@ -666,7 +666,7 @@
             stopBackgroundMusic();
             if (!audioCtx) return;
 
-            const notes = [261.63, 329.63, 392.00, 493.88, 523.25]; // C4, E4, G4, B4, C5
+            const notes = [261.63, 329.63, 392.00, 493.88, 523.25];
             let noteIdx = 0;
 
             bgMusicTimer = setInterval(() => {
@@ -736,7 +736,6 @@
                     osc.start(now);
                     osc.stop(now + 0.45);
                 } else if (type === 'levelup') {
-                    // Cheerful Arpeggio Celebration!
                     const cheerNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
                     cheerNotes.forEach((freq, idx) => {
                         const osc = audioCtx.createOscillator();
@@ -763,9 +762,8 @@
                     osc.start(now);
                     osc.stop(now + 0.25);
                 } else if (type === 'gameover_sad') {
-                    // Sad Descending Minor Tune ("duka hithena music")
                     stopBackgroundMusic();
-                    const sadNotes = [440, 415.30, 392, 349.23, 220]; // A4 -> G#4 -> G4 -> F4 -> A3
+                    const sadNotes = [440, 415.30, 392, 349.23, 220];
                     sadNotes.forEach((freq, idx) => {
                         const osc = audioCtx.createOscillator();
                         const gain = audioCtx.createGain();
@@ -826,7 +824,6 @@
         const deptInput = document.getElementById('player-dept');
         const suggestionsBox = document.getElementById('dept-suggestions');
 
-        // Auto-Load Previously Saved Profile on Device!
         const savedName = localStorage.getItem('riyan_saved_player_name');
         const savedDept = localStorage.getItem('riyan_saved_player_dept');
         if (savedName) nameInput.value = savedName;
@@ -872,7 +869,7 @@
         let score = 0;
         let lives = 3;
         let level = 1;
-        const MAX_LEVEL = 29; // Capped at Level 29 for Riyan 29th Anniversary!
+        const MAX_LEVEL = 29;
         let frameCount = 0;
         let playerObj = null;
         let items = [];
@@ -882,28 +879,27 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_v5";
+        // Highly-Reliable Public Global REST Storage for Real-Time Cross-Browser Sync!
+        const GLOBAL_API_ENDPOINT = "https://api.npoint.io/46944e803362a74c2d3b";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v6";
 
         function getLocalScores() {
-            const stored = localStorage.getItem(CLOUD_STORAGE_KEY);
+            const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
             return stored ? JSON.parse(stored) : [];
         }
 
         async function fetchGlobalScores() {
             try {
-                const res = await fetch(`https://keyvalue.immanuel.co/api/Key/GetValue/${CLOUD_STORAGE_KEY}`);
+                const res = await fetch(GLOBAL_API_ENDPOINT, { cache: 'no-store' });
                 if (res.ok) {
-                    const text = await res.text();
-                    if (text && text !== "null") {
-                        const parsed = JSON.parse(text);
-                        if (Array.isArray(parsed)) {
-                            localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(parsed));
-                            return parsed;
-                        }
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                        return data;
                     }
                 }
             } catch (e) {
-                console.log("Using local cache scores");
+                console.log("Using cached local scores");
             }
             return getLocalScores();
         }
@@ -912,7 +908,7 @@
             localStorage.setItem('riyan_saved_player_name', name);
             localStorage.setItem('riyan_saved_player_dept', dept);
 
-            let lb = getLocalScores();
+            let lb = await fetchGlobalScores();
             
             const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
             if (existingIdx !== -1) {
@@ -927,14 +923,16 @@
             lb.sort((a, b) => b.score - a.score);
             lb = lb.slice(0, 20);
 
-            localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(lb));
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lb));
 
             try {
-                await fetch(`https://keyvalue.immanuel.co/api/Key/PostValue/${CLOUD_STORAGE_KEY}/${encodeURIComponent(JSON.stringify(lb))}`, {
-                    method: 'POST'
+                await fetch(GLOBAL_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(lb)
                 });
             } catch (e) {
-                console.log("Cloud sync saved locally");
+                console.log("Global sync saved locally");
             }
             return lb;
         }
@@ -1009,13 +1007,13 @@
 
         renderLeaderboard('leaderboard-list');
 
-        // Player Class (Allows smooth PC Mouse & Mobile Touch movement!)
+        // REALISTIC HUMAN SWIMMER / DIVER CHARACTER ("මිනිහෙක් පීනනවා වගේ")
         class Player {
             constructor() {
                 this.x = 80;
                 this.y = canvas.height / 2;
-                this.width = 50;
-                this.height = 35;
+                this.width = 60;
+                this.height = 32;
                 this.speed = 8.5;
                 this.targetX = this.x;
                 this.targetY = this.y;
@@ -1023,19 +1021,16 @@
             }
 
             update() {
-                // Keyboard Arrow Controls
                 if (keys.Up && this.y > 0) this.y -= this.speed;
                 if (keys.Down && this.y < canvas.height - this.height) this.y += this.speed;
                 if (keys.Left && this.x > 0) this.x -= this.speed;
                 if (keys.Right && this.x < canvas.width - this.width) this.x += this.speed;
 
-                // Smooth Mouse (PC) & Touch (Mobile) Target Tracking
                 if (this.targetY !== undefined) {
                     this.y += (this.targetY - this.y) * 0.32;
                     this.x += (this.targetX - this.x) * 0.32;
                 }
 
-                // Full edge-to-edge canvas boundary clamping!
                 this.x = Math.max(0, Math.min(canvas.width - this.width, this.x));
                 this.y = Math.max(0, Math.min(canvas.height - this.height, this.y));
 
@@ -1046,49 +1041,97 @@
                 ctx.save();
                 ctx.translate(this.x, this.y);
 
-                // Body
-                ctx.fillStyle = "#00bcd4";
-                ctx.beginPath();
-                ctx.ellipse(25, 18, 22, 12, 0, 0, Math.PI * 2);
-                ctx.fill();
+                const strokeCycle = Math.sin(frameCount * 0.18);
+                const kickCycle = Math.cos(frameCount * 0.22);
 
-                // Head
-                ctx.fillStyle = "#ffcc80";
-                ctx.beginPath();
-                ctx.arc(42, 14, 9, 0, Math.PI * 2);
-                ctx.fill();
+                // --- 1. LEG & FLIPPERS KICKING (Back end) ---
+                // Upper Leg
+                ctx.fillStyle = "#ffcc80"; // Skin tone
+                ctx.fillRect(-8, 12 + (kickCycle * 3), 16, 6);
+                ctx.fillRect(-8, 18 - (kickCycle * 3), 16, 6);
 
-                // Goggles
-                ctx.fillStyle = "#000";
-                ctx.fillRect(40, 10, 8, 7);
-                ctx.fillStyle = "#80deea";
-                ctx.fillRect(42, 11, 5, 5);
-
-                // Flippers
-                ctx.fillStyle = "#ffd700";
-                const kick = Math.sin(frameCount * 0.2) * 5;
+                // Diving Flippers (Kicking motion)
+                ctx.fillStyle = "#ffd700"; // Gold flippers
                 ctx.beginPath();
-                ctx.moveTo(2, 15);
-                ctx.lineTo(-12, 10 + kick);
-                ctx.lineTo(-12, 25 - kick);
+                ctx.moveTo(-8, 12 + (kickCycle * 4));
+                ctx.lineTo(-20, 6 + (kickCycle * 8));
+                ctx.lineTo(-20, 18 + (kickCycle * 8));
                 ctx.closePath();
                 ctx.fill();
 
-                // Riyan Tank
+                ctx.beginPath();
+                ctx.moveTo(-8, 18 - (kickCycle * 4));
+                ctx.lineTo(-20, 14 - (kickCycle * 8));
+                ctx.lineTo(-20, 26 - (kickCycle * 8));
+                ctx.closePath();
+                ctx.fill();
+
+                // --- 2. HUMAN TORSO / SWIMSUIT ---
+                // Team Riyan Wetsuit
+                ctx.fillStyle = "#00bcd4";
+                ctx.beginPath();
+                ctx.roundRect(8, 8, 28, 18, 8);
+                ctx.fill();
+
+                // Oxygen Tank & 29th Badge
                 ctx.fillStyle = "#ff9800";
-                ctx.fillRect(10, 5, 16, 6);
+                ctx.beginPath();
+                ctx.roundRect(12, 3, 20, 6, 3);
+                ctx.fill();
+
                 ctx.fillStyle = "#fff";
                 ctx.font = "bold 7px Outfit";
-                ctx.fillText("29th", 11, 10);
+                ctx.fillText("29th", 16, 8);
 
-                // Shield Aura
+                // --- 3. HUMAN HEAD & DIVING MASK ---
+                // Head
+                ctx.fillStyle = "#ffcc80";
+                ctx.beginPath();
+                ctx.arc(42, 16, 8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Hair / Swim Cap
+                ctx.fillStyle = "#3e2723";
+                ctx.beginPath();
+                ctx.arc(40, 14, 8, Math.PI * 0.8, Math.PI * 1.9);
+                ctx.fill();
+
+                // Diving Goggles & Snorkel Mask
+                ctx.fillStyle = "#000";
+                ctx.beginPath();
+                ctx.roundRect(40, 12, 8, 7, 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#80deea";
+                ctx.beginPath();
+                ctx.roundRect(42, 13, 5, 5, 1);
+                ctx.fill();
+
+                // --- 4. HUMAN ARMS (Swimming Stroke Motion!) ---
+                ctx.strokeStyle = "#ffcc80";
+                ctx.lineWidth = 4;
+                ctx.lineCap = "round";
+
+                // Front Arm Stroke
+                ctx.beginPath();
+                ctx.moveTo(32, 12);
+                ctx.lineTo(44 + (strokeCycle * 8), 6 - (strokeCycle * 4));
+                ctx.stroke();
+
+                // Back Arm Stroke
+                ctx.beginPath();
+                ctx.moveTo(28, 20);
+                ctx.lineTo(38 - (strokeCycle * 8), 26 + (strokeCycle * 4));
+                ctx.stroke();
+
+                // --- 5. SHIELD AURA IF ACTIVE ---
                 if (this.shieldTime > 0) {
                     ctx.strokeStyle = "#ffd700";
                     ctx.lineWidth = 3;
                     ctx.shadowColor = "#ffd700";
-                    ctx.shadowBlur = 15;
+                    ctx.shadowBlur = 18;
                     ctx.beginPath();
-                    ctx.arc(25, 18, 32, 0, Math.PI * 2);
+                    ctx.arc(20, 16, 36, 0, Math.PI * 2);
                     ctx.stroke();
                 }
 
@@ -1275,7 +1318,7 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // PC Mouse Move Listener (Swimmer follows Mouse Cursor on PC!)
+        // PC Mouse Move Listener
         canvas.addEventListener('mousemove', (e) => {
             if (!gameRunning || !playerObj) return;
             const rect = canvas.getBoundingClientRect();
@@ -1283,7 +1326,7 @@
             playerObj.targetY = e.clientY - rect.top - 18;
         });
 
-        // Direct Mobile Touch & Drag Listeners (Swimmer follows Finger on Mobile!)
+        // Mobile Touch Listeners
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1333,7 +1376,7 @@
             }
 
             initAudio();
-            startBackgroundMusic(); // Start Looping Background Ocean Music!
+            startBackgroundMusic();
 
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('hud').classList.remove('hidden');
@@ -1386,7 +1429,7 @@
                 playSound('victory');
                 document.getElementById('gameover-badge').innerText = "🏆 29th ANNIVERSARY CHAMPION!";
             } else {
-                playSound('gameover_sad'); // Play Sad Descending Tune!
+                playSound('gameover_sad');
                 document.getElementById('gameover-badge').innerText = "🌊 GAME OVER";
             }
 
@@ -1420,7 +1463,6 @@
             const spawnInterval = Math.max(16, 75 - (level * 2));
             if (frameCount % spawnInterval === 0) obstacles.push(new Obstacle());
 
-            // Level progression capped at Max Level 29!
             const calcLevel = Math.min(MAX_LEVEL, Math.floor(score / 600) + 1);
             if (calcLevel > level) {
                 level = calcLevel;
@@ -1455,7 +1497,6 @@
                     items.splice(i, 1);
                     updateHUD();
 
-                    // Check for Level 29 victory
                     if (level === MAX_LEVEL && score >= 17400) {
                         gameOver(true);
                         return;
@@ -1483,7 +1524,7 @@
                         obstacles.splice(i, 1);
 
                         if (lives <= 0) {
-                            gameOver(false); // Game over sad sound
+                            gameOver(false);
                             return;
                         }
                     }
