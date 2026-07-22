@@ -571,12 +571,12 @@
             font-size: 0.86rem;
         }
 
-        /* Responsive HUD Top Position (Prevents Cutoff under Mobile Browser Address Bar!) */
+        /* Default PC & General HUD Styling */
         #hud {
             position: absolute;
-            top: 25px; /* Down from top edge so address bar never blocks it! */
-            left: 10px;
-            right: 10px;
+            top: 15px;
+            left: 12px;
+            right: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -585,16 +585,16 @@
         }
 
         .hud-card {
-            background: rgba(5, 25, 35, 0.92);
+            background: rgba(5, 25, 35, 0.94);
             backdrop-filter: blur(10px);
             border: 1.5px solid var(--glass-border);
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 18px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
@@ -623,16 +623,44 @@
             transform: translate(-50%, -50%) scale(1.2);
         }
 
+        /* MOBILE SPECIFIC RE-RESPONSIVE FIX (Moves HUD safely below mobile browser URL bar!) */
         @media (max-width: 768px) {
             #game-wrapper {
-                height: 99vh;
+                height: 100vh;
+                height: -webkit-fill-available;
+                border-radius: 10px;
+                padding-top: 0;
+            }
+
+            .logo-text { font-size: 1.35rem; }
+            h1.game-title { font-size: 1.35rem; }
+
+            /* HUD position moved down to 60px so mobile URL bar & status bar never touch it! */
+            #hud {
+                top: 65px;
+                left: 6px;
+                right: 6px;
+                gap: 4px;
+            }
+
+            .hud-card {
+                font-size: 0.72rem;
+                padding: 4px 6px;
                 border-radius: 12px;
             }
-            .logo-text { font-size: 1.4rem; }
-            h1.game-title { font-size: 1.4rem; }
-            #hud { top: 32px; } /* Extra clearance for mobile browser bar */
-            .hud-card { font-size: 0.78rem; padding: 4px 8px; }
+
             .rules-grid { grid-template-columns: 1fr; gap: 2px; }
+
+            .overlay-screen {
+                padding: 10px 8px;
+                padding-top: 14px;
+            }
+
+            .avatar-card {
+                width: 38px;
+                height: 38px;
+                font-size: 1.15rem;
+            }
         }
     </style>
 </head>
@@ -641,7 +669,7 @@
     <div id="game-wrapper">
         <canvas id="gameCanvas"></canvas>
 
-        <!-- HUD (Clearance for Mobile Address Bar!) -->
+        <!-- HUD (Positioned 65px down on mobile so browser bar NEVER cuts it off!) -->
         <div id="hud" class="hidden">
             <div class="hud-card">
                 🏆 Score: <span id="hud-score">0</span>
@@ -1031,7 +1059,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v18";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v19";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1430,7 +1458,7 @@
             }
         }
 
-        // Expanded Sea Creatures & Obstacles Class (Jellyfish, Shark, Plastic, Octopus, Pufferfish!)
+        // Expanded Sea Creatures & Obstacles Class
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
