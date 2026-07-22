@@ -857,16 +857,13 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // Official Department Master List
+        // Initial Pre-set Department Master List (Sri Lanka, Design, Engineering, MEP, PM)
         const knownDepartments = [
-            "Riyan Sri Lanka",
-            "Architecture & Design",
-            "Structural Engineering",
-            "MEP Engineering",
-            "Project Management (PM)",
-            "Quantity Surveying & Cost",
-            "BIM & CAD Team",
-            "Admin & Finance"
+            "Sri Lanka",
+            "Design",
+            "Engineering",
+            "MEP",
+            "PM"
         ];
 
         const nameInput = document.getElementById('player-name');
@@ -953,7 +950,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v13";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v14";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1021,12 +1018,12 @@
             
             const deptScores = {};
             scores.forEach(entry => {
-                const d = entry.dept || "Architecture & Design";
+                const d = entry.dept || "Design";
                 if (!deptScores[d]) deptScores[d] = 0;
                 deptScores[d] += entry.score;
             });
 
-            let topDept = "Architecture & Design";
+            let topDept = "Design";
             let maxScore = 0;
             for (const [dept, total] of Object.entries(deptScores)) {
                 if (total > maxScore) {
@@ -1037,9 +1034,11 @@
             return { name: topDept, score: maxScore };
         }
 
+        // Dynamically add new custom typed departments into auto-suggest list!
         function updateKnownDepartments(scores) {
+            if (!scores) return;
             scores.forEach(entry => {
-                if (entry.dept && !knownDepartments.includes(entry.dept)) {
+                if (entry.dept && !knownDepartments.some(d => d.toLowerCase() === entry.dept.toLowerCase())) {
                     knownDepartments.push(entry.dept);
                 }
             });
@@ -1480,7 +1479,7 @@
         document.getElementById('start-btn').addEventListener('click', async () => {
             const nameVal = nameInput.value.trim();
             const pinVal = pinInput.value.trim();
-            const deptVal = deptInput.value.trim() || "Riyan Sri Lanka";
+            const deptVal = deptInput.value.trim() || "Design";
 
             if (!nameVal) {
                 alert("Please enter your Username!");
@@ -1498,6 +1497,11 @@
             if (existingUser && existingUser.pin && existingUser.pin !== pinVal) {
                 alert(`⚠️ Username "${nameVal}" is already registered by another player!\n\nIf this is your profile, please enter your correct 4-digit PIN.\nOtherwise, please choose a different Username.`);
                 return;
+            }
+
+            // Register custom typed department into suggestions!
+            if (deptVal && !knownDepartments.some(d => d.toLowerCase() === deptVal.toLowerCase())) {
+                knownDepartments.push(deptVal);
             }
 
             initAudio();
@@ -1560,7 +1564,7 @@
 
             const name = nameInput.value.trim();
             const pin = pinInput.value.trim();
-            const dept = deptInput.value.trim() || "Riyan Sri Lanka";
+            const dept = deptInput.value.trim() || "Design";
 
             await saveScore(name, pin, dept, selectedAvatar, score);
 
