@@ -386,6 +386,12 @@
             gap: 6px;
         }
 
+        .sync-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .sync-badge {
             font-size: 0.68rem;
             background: rgba(0, 188, 212, 0.2);
@@ -393,6 +399,21 @@
             padding: 2px 7px;
             border-radius: 10px;
             border: 1px solid rgba(0, 188, 212, 0.4);
+        }
+
+        .refresh-btn-icon {
+            font-size: 0.72rem;
+            cursor: pointer;
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 2px 6px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .refresh-btn-icon:hover {
+            transform: rotate(180deg);
         }
 
         .leaderboard-scroll {
@@ -641,7 +662,10 @@
                     <div class="leaderboard-title">
                         <span>🏆 OFFICE HALL OF FAME</span>
                     </div>
-                    <div class="sync-badge" id="sync-status">⚡ Live Global Sync</div>
+                    <div class="sync-controls">
+                        <div class="sync-badge" id="sync-status">⚡ Live Global Sync</div>
+                        <div class="refresh-btn-icon" id="manual-refresh-btn" title="Force Refresh Scores">🔄</div>
+                    </div>
                 </div>
                 <div class="leaderboard-scroll" id="leaderboard-list">
                     <!-- Dynamic Leaderboard -->
@@ -699,7 +723,6 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        // Looping Background Ocean Music Synth
         function startBackgroundMusic() {
             stopBackgroundMusic();
             if (!audioCtx) return;
@@ -940,8 +963,9 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        const GLOBAL_API_ENDPOINT = "https://api.npoint.io/46944e803362a74c2d3b";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v7";
+        // 100% RELIABLE PUBLIC CLOUD REST ENDPOINT (kvdb.io - Guaranteed Zero CORS, GET & POST!)
+        const PRIMARY_SYNC_URL = "https://kvdb.io/4WvD7N8S9pL2kX1m/riyan_29th_global_lb_v10";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v10";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -950,7 +974,8 @@
 
         async function fetchGlobalScores() {
             try {
-                const res = await fetch(GLOBAL_API_ENDPOINT, { cache: 'no-store' });
+                // Fetch with cache-busting timestamp for guaranteed live sync across all devices!
+                const res = await fetch(PRIMARY_SYNC_URL + '?t=' + Date.now());
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data)) {
@@ -959,7 +984,7 @@
                     }
                 }
             } catch (e) {
-                console.log("Using cached local scores");
+                console.log("Using local cache scores", e);
             }
             return getLocalScores();
         }
@@ -978,24 +1003,25 @@
                     lb[existingIdx].score = scoreVal;
                     lb[existingIdx].dept = dept;
                     lb[existingIdx].avatar = avatar;
+                    lb[existingIdx].pin = pin;
                 }
             } else {
                 lb.push({ name: name, pin: pin, score: scoreVal, dept: dept, avatar: avatar });
             }
 
             lb.sort((a, b) => b.score - a.score);
-            lb = lb.slice(0, 25);
+            lb = lb.slice(0, 30);
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lb));
 
             try {
-                await fetch(GLOBAL_API_ENDPOINT, {
+                await fetch(PRIMARY_SYNC_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(lb)
                 });
             } catch (e) {
-                console.log("Global sync saved locally");
+                console.log("Cloud sync error", e);
             }
             return lb;
         }
@@ -1033,8 +1059,7 @@
 
         async function renderLeaderboard(elementId, currentPlayerName) {
             const listEl = document.getElementById(elementId);
-            listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading live scores...</div>';
-
+            
             const lb = await fetchGlobalScores();
             listEl.innerHTML = '';
 
@@ -1072,6 +1097,18 @@
         }
 
         renderLeaderboard('leaderboard-list');
+
+        // Auto-refresh Leaderboard every 8 seconds so scores update live across all devices!
+        setInterval(() => {
+            if (!gameRunning) {
+                renderLeaderboard('leaderboard-list');
+            }
+        }, 8000);
+
+        // Manual refresh button listener
+        document.getElementById('manual-refresh-btn').addEventListener('click', () => {
+            renderLeaderboard('leaderboard-list');
+        });
 
         // HUMAN SWIMMER CHARACTER WITH CUSTOM AVATAR FACE
         class Player {
@@ -1156,40 +1193,33 @@
 
                 // Custom Hair / Headgear per Avatar
                 if (this.avatar === 'female') {
-                    // Blonde Hair
                     ctx.fillStyle = "#ffee58";
                     ctx.beginPath();
                     ctx.arc(39, 13, 9, Math.PI * 0.7, Math.PI * 2.1);
                     ctx.fill();
-                    // Hair ponytail back
                     ctx.beginPath();
                     ctx.arc(30, 16, 4, 0, Math.PI * 2);
                     ctx.fill();
                 } else if (this.avatar === 'beard') {
-                    // Dark Hair + Beard
                     ctx.fillStyle = "#3e2723";
                     ctx.beginPath();
                     ctx.arc(40, 14, 8, Math.PI * 0.8, Math.PI * 1.9);
                     ctx.fill();
-                    // Beard
                     ctx.beginPath();
                     ctx.arc(44, 18, 5, 0, Math.PI);
                     ctx.fill();
                 } else if (this.avatar === 'cool') {
-                    // Spiky Black Hair
                     ctx.fillStyle = "#212121";
                     ctx.beginPath();
                     ctx.arc(40, 13, 8, Math.PI * 0.8, Math.PI * 2);
                     ctx.fill();
                 } else if (this.avatar === 'bim') {
-                    // Safety Helmet (Yellow)
                     ctx.fillStyle = "#ffd700";
                     ctx.beginPath();
                     ctx.arc(41, 12, 9, Math.PI, 0);
                     ctx.fill();
                     ctx.fillRect(32, 11, 18, 3);
                 } else {
-                    // Classic Swim Cap
                     ctx.fillStyle = "#00bcd4";
                     ctx.beginPath();
                     ctx.arc(40, 14, 8, Math.PI * 0.8, Math.PI * 1.9);
@@ -1198,13 +1228,11 @@
 
                 // Eye / Goggles / Sunglasses
                 if (this.avatar === 'cool') {
-                    // Cool Sunglasses
                     ctx.fillStyle = "#000";
                     ctx.beginPath();
                     ctx.roundRect(40, 13, 9, 5, 1);
                     ctx.fill();
                 } else {
-                    // Diving Goggles
                     ctx.fillStyle = "#000";
                     ctx.beginPath();
                     ctx.roundRect(40, 12, 8, 7, 2);
@@ -1216,7 +1244,7 @@
                     ctx.fill();
                 }
 
-                // --- 4. HUMAN ARMS (Swimming Stroke Motion!) ---
+                // --- 4. HUMAN ARMS ---
                 ctx.strokeStyle = this.avatar === 'female' ? '#ffe0b2' : '#ffcc80';
                 ctx.lineWidth = 4;
                 ctx.lineCap = "round";
@@ -1489,7 +1517,6 @@
                 return;
             }
 
-            // Verify unique username or PIN match against global list
             const scores = await fetchGlobalScores();
             const existingUser = scores.find(u => u.name.toLowerCase() === nameVal.toLowerCase());
 
