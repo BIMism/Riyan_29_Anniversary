@@ -29,15 +29,19 @@
             font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: var(--bg-dark);
             color: var(--text-light);
-            min-height: 100vh;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             background: radial-gradient(circle at 50% 10%, #003554 0%, #051923 80%);
             padding: 5px;
         }
@@ -564,7 +568,6 @@
             display: block;
         }
 
-        /* Level Badge in the Middle Column of Leaderboard */
         .lb-level-badge {
             background: rgba(255, 215, 0, 0.15);
             border: 1px solid rgba(255, 215, 0, 0.5);
@@ -586,7 +589,7 @@
             text-align: right;
         }
 
-        /* Default PC & General HUD Styling */
+        /* Default HUD Styling */
         #hud {
             position: absolute;
             top: 15px;
@@ -638,42 +641,52 @@
             transform: translate(-50%, -50%) scale(1.2);
         }
 
-        /* MOBILE SPECIFIC RE-RESPONSIVE FIX */
+        /* FULL MOBILE SCREEN RESPONSIVE RE-OVERHAUL */
         @media (max-width: 768px) {
+            body {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
             #game-wrapper {
-                height: 100vh;
-                height: -webkit-fill-available;
-                border-radius: 10px;
-                padding-top: 0;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-width: none !important;
+                max-height: none !important;
+                border-radius: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
             }
 
             .logo-text { font-size: 1.35rem; }
             h1.game-title { font-size: 1.35rem; }
 
+            /* Mobile HUD sits right at top of full-bleed game wrapper! */
             #hud {
-                top: 65px;
-                left: 6px;
-                right: 6px;
+                top: 14px;
+                left: 8px;
+                right: 8px;
                 gap: 4px;
             }
 
             .hud-card {
-                font-size: 0.72rem;
-                padding: 4px 6px;
-                border-radius: 12px;
+                font-size: 0.76rem;
+                padding: 4px 8px;
+                border-radius: 14px;
             }
 
             .rules-grid { grid-template-columns: 1fr; gap: 2px; }
 
             .overlay-screen {
-                padding: 10px 8px;
+                padding: 12px 10px;
                 padding-top: 14px;
             }
 
             .avatar-card {
-                width: 38px;
-                height: 38px;
-                font-size: 1.15rem;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
             }
 
             .lb-level-badge {
@@ -1079,7 +1092,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v21";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v22";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1208,7 +1221,6 @@
                 const deptLabel = entry.dept ? entry.dept : 'Team Riyan';
                 const avatarIcon = avatarEmojis[entry.avatar] || '🤿';
                 
-                // Accurately calculate Level reached from high score if not set!
                 const calcLvl = entry.level || Math.min(MAX_LEVEL, Math.floor(entry.score / 600) + 1);
 
                 const row = document.createElement('div');
@@ -1474,7 +1486,6 @@
 
                 const bounce = Math.sin(frameCount * 0.1 + this.x) * 4;
 
-                // Bright glowing gold aura for 29th Cake reward so it never gets confused with spiky pufferfish!
                 if (this.itemData.type === 'cake') {
                     ctx.shadowColor = "#ffd700";
                     ctx.shadowBlur = 20;
@@ -1496,7 +1507,7 @@
             }
         }
 
-        // Expanded Sea Creatures & Obstacles Class (Pufferfish redesigned as Spiky Purple & Neon Red Danger!)
+        // Expanded Sea Creatures & Obstacles Class
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
@@ -1598,15 +1609,13 @@
                         ctx.stroke();
                     }
                 } else if (this.type === 'pufferfish') {
-                    // Distinct Spiky Deep Purple Body & Neon Red Spikes (Screams DANGER!)
                     const puff = Math.abs(Math.sin(frameCount * 0.12)) * 6;
-                    ctx.fillStyle = "#6a1b9a"; // Deep Purple
+                    ctx.fillStyle = "#6a1b9a";
                     ctx.beginPath();
                     ctx.arc(18, 18, 14 + puff, 0, Math.PI * 2);
                     ctx.fill();
 
-                    // Angry Red Spikes
-                    ctx.fillStyle = "#ff1744"; // Neon Danger Red
+                    ctx.fillStyle = "#ff1744";
                     for (let a = 0; a < Math.PI * 2; a += Math.PI / 5) {
                         const px = 18 + Math.cos(a) * (15 + puff);
                         const py = 18 + Math.sin(a) * (15 + puff);
@@ -1615,7 +1624,6 @@
                         ctx.fill();
                     }
 
-                    // Angry Eye
                     ctx.fillStyle = "#fff";
                     ctx.beginPath();
                     ctx.arc(12, 14, 4, 0, Math.PI * 2);
