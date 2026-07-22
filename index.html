@@ -44,7 +44,7 @@
             background: radial-gradient(circle at 50% 10%, #003554 0%, #051923 80%);
         }
 
-        /* Full Screen Game Wrapper - Absolutely fills 100% of the screen everywhere */
+        /* Full Screen Game Wrapper */
         #game-wrapper {
             position: absolute;
             top: 0;
@@ -444,6 +444,17 @@
             box-shadow: 0 12px 25px rgba(255, 215, 0, 0.6);
         }
 
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid var(--glass-border);
+            color: #e0f7fa;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 188, 212, 0.2);
+            border-color: var(--primary);
+        }
+
         /* Leaderboard Box */
         .leaderboard-box {
             background: rgba(5, 22, 33, 0.88);
@@ -611,10 +622,39 @@
             align-items: center;
             gap: 5px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            pointer-events: auto;
         }
 
         .hud-card span {
             color: var(--accent);
+        }
+
+        /* Interactive Pause Button inside HUD */
+        .pause-btn-card {
+            cursor: pointer;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 152, 0, 0.3));
+            border-color: #ffd700;
+            color: #ffd700;
+            transition: all 0.2s ease;
+        }
+
+        .pause-btn-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Pause Screen Styling */
+        #pause-screen {
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .pause-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            letter-spacing: 2px;
         }
 
         /* Level Up Flare Overlay */
@@ -692,6 +732,10 @@
             <div class="hud-card">
                 ✨ Level: <span id="hud-level">1 / 29</span>
             </div>
+            <!-- Pause Button -->
+            <div class="hud-card pause-btn-card" id="pause-btn" title="Pause Game (Shortcut: 'P' or 'Space')">
+                ⏸️ Pause
+            </div>
         </div>
 
         <!-- Level Flare Animation -->
@@ -719,8 +763,8 @@
 
             <!-- How To Play Controls Card -->
             <div class="controls-guide-card">
-                <div class="controls-guide-item">🖥️ <span>PC:</span> Move Mouse Cursor</div>
-                <div class="controls-guide-item">📱 <span>Mobile:</span> Touch & Drag Finger</div>
+                <div class="controls-guide-item">🖥️ <span>PC:</span> Move Mouse Cursor / 'P' to Pause</div>
+                <div class="controls-guide-item">📱 <span>Mobile:</span> Touch & Drag / ⏸️ Pause</div>
             </div>
 
             <!-- Game Rules & Items Guide -->
@@ -777,6 +821,24 @@
                 <div class="leaderboard-scroll" id="leaderboard-list">
                     <!-- Dynamic Top 5 -->
                 </div>
+            </div>
+        </div>
+
+        <!-- PAUSE OVERLAY SCREEN -->
+        <div id="pause-screen" class="overlay-screen hidden">
+            <div class="brand-header">
+                <div class="logo-emblem">R</div>
+                <div class="logo-text">RIYAN</div>
+            </div>
+            <div class="anniversary-badge">🎉 29th ANNIVERSARY OCEAN QUEST</div>
+            
+            <h1 class="pause-title">⏸️ GAME PAUSED</h1>
+            <p class="subtitle">Take a breather! Your ocean quest is safely paused.</p>
+
+            <div class="btn-container" style="flex-direction: column; width: 100%; max-width: 280px; gap: 12px; margin-top: 10px;">
+                <button class="btn btn-gold" id="resume-btn" style="font-size: 1.1rem; padding: 12px 24px;">▶️ RESUME SWIMMING</button>
+                <button class="btn btn-outline" id="pause-restart-btn">🔄 RESTART GAME</button>
+                <button class="btn btn-outline" id="pause-menu-btn">🏠 MAIN MENU</button>
             </div>
         </div>
 
@@ -838,7 +900,7 @@
             let noteIdx = 0;
 
             bgMusicTimer = setInterval(() => {
-                if (!gameRunning) return;
+                if (!gameRunning || isPaused) return;
                 try {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
@@ -1057,6 +1119,7 @@
 
         // Game State
         let gameRunning = false;
+        let isPaused = false;
         let score = 0;
         let lives = 3;
         let level = 1;
@@ -1073,7 +1136,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v26";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v27";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1681,7 +1744,7 @@
 
         // PC Mouse Move Listener
         canvas.addEventListener('mousemove', (e) => {
-            if (!gameRunning || !playerObj) return;
+            if (!gameRunning || isPaused || !playerObj) return;
             const rect = canvas.getBoundingClientRect();
             playerObj.targetX = e.clientX - rect.left - 25;
             playerObj.targetY = e.clientY - rect.top - 18;
@@ -1689,7 +1752,7 @@
 
         // Mobile Touch Listeners
         function handleTouchMove(e) {
-            if (!gameRunning || !playerObj) return;
+            if (!gameRunning || isPaused || !playerObj) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             const touch = e.touches[0];
@@ -1700,8 +1763,12 @@
         canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
         canvas.addEventListener('touchstart', handleTouchMove, { passive: false });
 
-        // Keyboard Controls
+        // Keyboard Controls & Pause Hotkey ('P' or 'Space')
         window.addEventListener('keydown', (e) => {
+            if (e.key === 'p' || e.key === 'P' || e.key === ' ') {
+                if (gameRunning) togglePause();
+                return;
+            }
             if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.Up = true;
             if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.Down = true;
             if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.Left = true;
@@ -1713,6 +1780,39 @@
             if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.Down = false;
             if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.Left = false;
             if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.Right = false;
+        });
+
+        // Toggle Pause Logic
+        function togglePause() {
+            if (!gameRunning) return;
+            isPaused = !isPaused;
+
+            const pauseScreen = document.getElementById('pause-screen');
+            if (isPaused) {
+                pauseScreen.classList.remove('hidden');
+            } else {
+                pauseScreen.classList.add('hidden');
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        document.getElementById('pause-btn').addEventListener('click', togglePause);
+        document.getElementById('resume-btn').addEventListener('click', togglePause);
+
+        document.getElementById('pause-restart-btn').addEventListener('click', () => {
+            isPaused = false;
+            document.getElementById('pause-screen').classList.add('hidden');
+            document.getElementById('start-btn').click();
+        });
+
+        document.getElementById('pause-menu-btn').addEventListener('click', () => {
+            isPaused = false;
+            gameRunning = false;
+            stopBackgroundMusic();
+            document.getElementById('pause-screen').classList.add('hidden');
+            document.getElementById('hud').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            renderLeaderboard('leaderboard-list', null, 5);
         });
 
         // Start Game Listener with Unique Username & 4-Digit PIN Security
@@ -1747,6 +1847,7 @@
             startBackgroundMusic();
 
             document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('pause-screen').classList.add('hidden');
             document.getElementById('hud').classList.remove('hidden');
 
             playerObj = new Player(selectedAvatar);
@@ -1757,6 +1858,7 @@
             obstacles = [];
             particles = [];
             gameRunning = true;
+            isPaused = false;
 
             resizeCanvas();
             updateHUD();
@@ -1814,6 +1916,7 @@
 
         async function gameOver(isVictory = false) {
             gameRunning = false;
+            isPaused = false;
             stopBackgroundMusic();
 
             if (isVictory) {
@@ -1844,7 +1947,7 @@
 
         // Game Loop
         function gameLoop() {
-            if (!gameRunning) return;
+            if (!gameRunning || isPaused) return;
 
             frameCount++;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
