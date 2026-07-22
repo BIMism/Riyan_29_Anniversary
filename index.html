@@ -343,7 +343,6 @@
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* Fixed PIN width & text padding so passwords never cut off on mobile screens! */
         #player-name {
             flex: 1.6;
             min-width: 0;
@@ -568,7 +567,7 @@
         /* Level Badge in the Middle Column of Leaderboard */
         .lb-level-badge {
             background: rgba(255, 215, 0, 0.15);
-            border: 1px solid rgba(255, 215, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.5);
             color: #ffd700;
             font-weight: 800;
             font-size: 0.72rem;
@@ -576,6 +575,7 @@
             border-radius: 10px;
             margin: 0 8px;
             white-space: nowrap;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
         }
 
         .lb-score {
@@ -1079,7 +1079,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v20";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v21";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1180,7 +1180,7 @@
 
         const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
 
-        // Render Individual Leaderboard (Displays Level Reached in the middle column!)
+        // Render Individual Leaderboard (Accurately calculates Level reached from score for all entries!)
         async function renderLeaderboard(elementId, currentPlayerName, maxCount = null) {
             const listEl = document.getElementById(elementId);
             
@@ -1207,7 +1207,9 @@
                 const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
                 const deptLabel = entry.dept ? entry.dept : 'Team Riyan';
                 const avatarIcon = avatarEmojis[entry.avatar] || '🤿';
-                const lvlNum = entry.level || 1;
+                
+                // Accurately calculate Level reached from high score if not set!
+                const calcLvl = entry.level || Math.min(MAX_LEVEL, Math.floor(entry.score / 600) + 1);
 
                 const row = document.createElement('div');
                 row.className = `lb-row ${isMe ? 'my-score' : ''}`;
@@ -1217,7 +1219,7 @@
                         <span class="lb-name">${avatarIcon} ${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
                         <span class="lb-meta">${deptLabel}</span>
                     </div>
-                    <div class="lb-level-badge" title="Highest Level Reached">✨ Lvl ${lvlNum}</div>
+                    <div class="lb-level-badge" title="Level Reached">✨ Lvl ${calcLvl}</div>
                     <div class="lb-score">${entry.score.toLocaleString()} pts</div>
                 `;
                 listEl.appendChild(row);
@@ -1441,7 +1443,7 @@
             }
         }
 
-        // Item Class
+        // Item Class (29th Birthday Cake enhanced with glowing gold aura!)
         class Item {
             constructor() {
                 this.x = canvas.width + 30;
@@ -1466,24 +1468,35 @@
 
             draw() {
                 ctx.save();
-                ctx.font = "26px sans-serif";
+                ctx.font = this.itemData.type === 'cake' ? "32px sans-serif" : "26px sans-serif";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
                 const bounce = Math.sin(frameCount * 0.1 + this.x) * 4;
+
+                // Bright glowing gold aura for 29th Cake reward so it never gets confused with spiky pufferfish!
+                if (this.itemData.type === 'cake') {
+                    ctx.shadowColor = "#ffd700";
+                    ctx.shadowBlur = 20;
+                    ctx.strokeStyle = "#ffd700";
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y + bounce, 22, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else {
+                    ctx.strokeStyle = "rgba(255, 215, 0, 0.4)";
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y + bounce, 18, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
                 ctx.fillText(this.itemData.icon, this.x, this.y + bounce);
-
-                ctx.strokeStyle = "rgba(255, 215, 0, 0.4)";
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y + bounce, 18, 0, Math.PI * 2);
-                ctx.stroke();
-
                 ctx.restore();
             }
         }
 
-        // Expanded Sea Creatures & Obstacles Class
+        // Expanded Sea Creatures & Obstacles Class (Pufferfish redesigned as Spiky Purple & Neon Red Danger!)
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
@@ -1585,20 +1598,32 @@
                         ctx.stroke();
                     }
                 } else if (this.type === 'pufferfish') {
-                    const puff = Math.abs(Math.sin(frameCount * 0.1)) * 5;
-                    ctx.fillStyle = "#ffb74d";
+                    // Distinct Spiky Deep Purple Body & Neon Red Spikes (Screams DANGER!)
+                    const puff = Math.abs(Math.sin(frameCount * 0.12)) * 6;
+                    ctx.fillStyle = "#6a1b9a"; // Deep Purple
                     ctx.beginPath();
-                    ctx.arc(18, 18, 13 + puff, 0, Math.PI * 2);
+                    ctx.arc(18, 18, 14 + puff, 0, Math.PI * 2);
                     ctx.fill();
 
-                    ctx.fillStyle = "#e65100";
-                    for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
-                        const px = 18 + Math.cos(a) * (14 + puff);
-                        const py = 18 + Math.sin(a) * (14 + puff);
+                    // Angry Red Spikes
+                    ctx.fillStyle = "#ff1744"; // Neon Danger Red
+                    for (let a = 0; a < Math.PI * 2; a += Math.PI / 5) {
+                        const px = 18 + Math.cos(a) * (15 + puff);
+                        const py = 18 + Math.sin(a) * (15 + puff);
                         ctx.beginPath();
-                        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+                        ctx.arc(px, py, 3.5, 0, Math.PI * 2);
                         ctx.fill();
                     }
+
+                    // Angry Eye
+                    ctx.fillStyle = "#fff";
+                    ctx.beginPath();
+                    ctx.arc(12, 14, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "#ff1744";
+                    ctx.beginPath();
+                    ctx.arc(11, 14, 2, 0, Math.PI * 2);
+                    ctx.fill();
                 } else {
                     ctx.font = "24px sans-serif";
                     ctx.fillText("🍾", 10, 20);
