@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Riyan 29th Anniversary - Ocean Quest</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
             --accent: #ffd700;
             --accent-glow: rgba(255, 215, 0, 0.45);
             --bg-dark: #051923;
-            --glass-bg: rgba(6, 24, 34, 0.94);
+            --glass-bg: rgba(5, 20, 30, 0.94);
             --glass-border: rgba(0, 188, 212, 0.38);
             --text-light: #f0f9ff;
         }
@@ -24,6 +24,8 @@
             margin: 0;
             padding: 0;
             user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
             font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
@@ -37,7 +39,7 @@
             justify-content: center;
             overflow: hidden;
             background: radial-gradient(circle at 50% 10%, #003554 0%, #051923 80%);
-            padding: 10px;
+            padding: 5px;
         }
 
         /* Container */
@@ -57,6 +59,7 @@
             display: block;
             width: 100%;
             height: 100%;
+            touch-action: none;
         }
 
         /* Screens Overlay */
@@ -72,7 +75,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 25px 20px;
+            padding: 20px 16px;
             text-align: center;
             z-index: 10;
             overflow-y: auto;
@@ -87,27 +90,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 6px;
+            gap: 10px;
+            margin-bottom: 4px;
         }
 
         .logo-emblem {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #00bcd4, #005662);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #fff;
             box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
             border: 1.5px solid #80deea;
         }
 
         .logo-text {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             letter-spacing: 3px;
             background: linear-gradient(135deg, #ffffff 0%, #00bcd4 100%);
@@ -120,13 +123,13 @@
             background: linear-gradient(135deg, #ffd700, #ff9800);
             color: #051923;
             font-weight: 800;
-            font-size: 0.85rem;
-            padding: 5px 18px;
+            font-size: 0.8rem;
+            padding: 4px 16px;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
             box-shadow: 0 0 15px var(--accent-glow);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             animation: pulse 2s infinite;
         }
 
@@ -136,7 +139,7 @@
         }
 
         h1.game-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             background: linear-gradient(135deg, #ffffff 0%, #80deea 100%);
             -webkit-background-clip: text;
@@ -146,9 +149,9 @@
         }
 
         .subtitle {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #b2ebf2;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         /* Highlighted Top Department Banner */
@@ -156,10 +159,10 @@
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.25));
             border: 1.5px solid #ffd700;
             border-radius: 14px;
-            padding: 8px 16px;
+            padding: 8px 14px;
             width: 100%;
             max-width: 480px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -171,7 +174,7 @@
         }
 
         .dept-highlight-title {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #ffd700;
             font-weight: 800;
             text-transform: uppercase;
@@ -179,25 +182,25 @@
         }
 
         .dept-highlight-name {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 800;
             color: #fff;
         }
 
         .dept-highlight-score {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 900;
             color: #ffd700;
         }
 
         /* Inputs & Buttons */
         .input-group {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             width: 100%;
             max-width: 480px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
 
         .input-full {
@@ -206,12 +209,12 @@
 
         .input-group input, .input-group select {
             width: 100%;
-            padding: 11px 16px;
+            padding: 10px 14px;
             border-radius: 12px;
             border: 2px solid var(--glass-border);
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             outline: none;
             transition: all 0.3s ease;
         }
@@ -233,19 +236,19 @@
 
         .btn-container {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 10px 0;
+            margin: 8px 0;
             z-index: 2;
         }
 
         .btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
-            padding: 12px 28px;
+            padding: 10px 24px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -253,7 +256,7 @@
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn:hover {
@@ -290,7 +293,7 @@
             border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 12px 16px;
+            padding: 10px 14px;
             margin-top: 5px;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
         }
@@ -305,7 +308,7 @@
         }
 
         .leaderboard-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: var(--accent);
             display: flex;
@@ -314,7 +317,7 @@
         }
 
         .sync-badge {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             background: rgba(0, 188, 212, 0.2);
             color: #80deea;
             padding: 3px 8px;
@@ -323,7 +326,7 @@
         }
 
         .leaderboard-scroll {
-            max-height: 155px;
+            max-height: 145px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -343,7 +346,7 @@
             align-items: center;
             padding: 6px 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             border-radius: 8px;
             margin-bottom: 4px;
         }
@@ -378,7 +381,7 @@
         }
 
         .lb-meta {
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             color: #80deea;
             display: block;
         }
@@ -386,15 +389,15 @@
         .lb-score {
             font-weight: 800;
             color: var(--accent);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
         }
 
         /* HUD */
         #hud {
             position: absolute;
-            top: 15px;
-            left: 20px;
-            right: 20px;
+            top: 12px;
+            left: 15px;
+            right: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -403,31 +406,52 @@
         }
 
         .hud-card {
-            background: rgba(5, 25, 35, 0.8);
+            background: rgba(5, 25, 35, 0.82);
             backdrop-filter: blur(8px);
             border: 1px solid var(--glass-border);
-            padding: 8px 18px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 1rem;
+            font-size: 0.92rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .hud-card span {
             color: var(--accent);
         }
 
+        /* Level Up Flare Overlay */
+        #level-flare {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+            z-index: 8;
+        }
+
+        #level-flare.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
         /* Items Guide */
         .items-guide {
             display: flex;
-            gap: 10px;
-            margin: 6px 0 10px 0;
+            gap: 8px;
+            margin: 4px 0 8px 0;
             background: rgba(255, 255, 255, 0.05);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -441,12 +465,12 @@
         /* Toast notification */
         #toast {
             position: absolute;
-            bottom: 25px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: #2e7d32;
             color: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 25px;
             font-weight: 600;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -454,26 +478,26 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         #toast.show {
             opacity: 1;
         }
 
-        /* Mobile D-Pad */
+        /* Mobile D-Pad & Touch Guide */
         #mobile-controls {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
+            bottom: 12px;
+            left: 12px;
             display: none;
             z-index: 5;
         }
 
         .d-pad {
             display: grid;
-            grid-template-columns: repeat(3, 42px);
-            grid-template-rows: repeat(2, 42px);
+            grid-template-columns: repeat(3, 40px);
+            grid-template-rows: repeat(2, 40px);
             gap: 4px;
         }
 
@@ -482,7 +506,7 @@
             border: 1px solid var(--primary);
             border-radius: 10px;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -496,11 +520,11 @@
 
         @media (max-width: 768px) {
             #game-wrapper {
-                height: 96vh;
+                height: 98vh;
                 border-radius: 12px;
             }
-            .logo-text { font-size: 1.7rem; }
-            h1.game-title { font-size: 1.7rem; }
+            .logo-text { font-size: 1.6rem; }
+            h1.game-title { font-size: 1.6rem; }
             .input-group { grid-template-columns: 1fr; }
             .input-full { grid-column: span 1; }
             #mobile-controls { display: flex; }
@@ -525,6 +549,9 @@
             </div>
         </div>
 
+        <!-- Level Flare Animation -->
+        <div id="level-flare">LEVEL UP! 🚀</div>
+
         <!-- Mobile D-Pad -->
         <div id="mobile-controls">
             <div class="d-pad">
@@ -545,7 +572,7 @@
             </div>
             <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
             <h1 class="game-title">OCEAN QUEST</h1>
-            <p class="subtitle">Swim Maldives Seas • Collect Riyan Rulers • Dodge Sea Creatures</p>
+            <p class="subtitle">Drag finger on mobile or use Arrow keys to swim!</p>
 
             <!-- Input Fields for Name, Department & Office Location -->
             <div class="input-group">
@@ -581,9 +608,9 @@
             <div class="dept-highlight-card" id="top-dept-card">
                 <div class="dept-highlight-info">
                     <div class="dept-highlight-title">👑 LEADING DEPARTMENT</div>
-                    <div class="dept-highlight-name" id="top-dept-name">Architecture & Design</div>
+                    <div class="dept-highlight-name" id="top-dept-name">No Scores Yet</div>
                 </div>
-                <div class="dept-highlight-score" id="top-dept-score">4,500 Pts</div>
+                <div class="dept-highlight-score" id="top-dept-score">0 Pts</div>
             </div>
 
             <!-- Leaderboard -->
@@ -620,9 +647,9 @@
             <div class="dept-highlight-card" id="gameover-top-dept-card">
                 <div class="dept-highlight-info">
                     <div class="dept-highlight-title">👑 LEADING DEPARTMENT</div>
-                    <div class="dept-highlight-name" id="gameover-top-dept-name">Architecture & Design</div>
+                    <div class="dept-highlight-name" id="gameover-top-dept-name">No Scores Yet</div>
                 </div>
-                <div class="dept-highlight-score" id="gameover-top-dept-score">4,500 Pts</div>
+                <div class="dept-highlight-score" id="gameover-top-dept-score">0 Pts</div>
             </div>
 
             <!-- Leaderboard -->
@@ -696,6 +723,16 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
                     osc.start(now);
                     osc.stop(now + 0.5);
+                } else if (type === 'levelup') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    osc.frequency.setValueAtTime(880, now + 0.3);
+                    gain.gain.setValueAtTime(0.35, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
                 }
             } catch (e) {
                 console.log("Audio error", e);
@@ -728,21 +765,12 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        // Default Hall of Fame
-        const defaultLeaderboard = [
-            { name: "Kasun (Architect)", score: 4500, office: "Sri Lanka Back Office", dept: "Architecture & Design" },
-            { name: "Maldives HQ Champion", score: 3800, office: "Maldives HQ", dept: "Project Management" },
-            { name: "Nimali (Engineering)", score: 3200, office: "Sri Lanka Back Office", dept: "Structural & MEP Engineering" },
-            { name: "Asanka (Lanka Office)", score: 3150, office: "Sri Lanka Back Office", dept: "Architecture & Design" },
-            { name: "Engineer Riyan", score: 2600, office: "Maldives HQ", dept: "Structural & MEP Engineering" },
-            { name: "Dilan (Project Mgr)", score: 2100, office: "Sri Lanka Back Office", dept: "Project Management" }
-        ];
-
-        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v2";
+        // Clean Reset Leaderboard Key
+        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_v4";
 
         function getLocalScores() {
             const stored = localStorage.getItem(CLOUD_STORAGE_KEY);
-            return stored ? JSON.parse(stored) : defaultLeaderboard;
+            return stored ? JSON.parse(stored) : [];
         }
 
         async function fetchGlobalScores() {
@@ -752,7 +780,7 @@
                     const text = await res.text();
                     if (text && text !== "null") {
                         const parsed = JSON.parse(text);
-                        if (Array.isArray(parsed) && parsed.length > 0) {
+                        if (Array.isArray(parsed)) {
                             localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(parsed));
                             return parsed;
                         }
@@ -778,7 +806,7 @@
             }
 
             lb.sort((a, b) => b.score - a.score);
-            lb = lb.slice(0, 15);
+            lb = lb.slice(0, 20);
 
             localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(lb));
 
@@ -793,6 +821,8 @@
         }
 
         function calculateTopDepartment(scores) {
+            if (!scores || scores.length === 0) return { name: "Be the First to Play!", score: 0 };
+            
             const deptScores = {};
             scores.forEach(entry => {
                 const d = entry.dept || "Architecture & Design";
@@ -813,17 +843,21 @@
 
         async function renderLeaderboard(elementId, currentPlayerName) {
             const listEl = document.getElementById(elementId);
-            listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading scores...</div>';
+            listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading live scores...</div>';
 
             const lb = await fetchGlobalScores();
             listEl.innerHTML = '';
 
-            // Update Top Department Card
             const topDept = calculateTopDepartment(lb);
             document.getElementById('top-dept-name').innerText = topDept.name;
-            document.getElementById('top-dept-score').innerText = `${topDept.score.toLocaleString()} Pts`;
+            document.getElementById('top-dept-score').innerText = topDept.score > 0 ? `${topDept.score.toLocaleString()} Pts` : '';
             document.getElementById('gameover-top-dept-name').innerText = topDept.name;
-            document.getElementById('gameover-top-dept-score').innerText = `${topDept.score.toLocaleString()} Pts`;
+            document.getElementById('gameover-top-dept-score').innerText = topDept.score > 0 ? `${topDept.score.toLocaleString()} Pts` : '';
+
+            if (lb.length === 0) {
+                listEl.innerHTML = '<div style="color:#80deea; padding:12px; font-size:0.85rem;">No scores yet! Be the first to swim! 🏊‍♂️</div>';
+                return;
+            }
 
             lb.forEach((entry, idx) => {
                 const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
@@ -853,15 +887,28 @@
                 this.y = canvas.height / 2;
                 this.width = 50;
                 this.height = 35;
-                this.speed = 6.5;
+                this.speed = 7;
+                this.targetX = this.x;
+                this.targetY = this.y;
                 this.shieldTime = 0;
             }
 
             update() {
+                // Keyboard Controls
                 if (keys.Up && this.y > 20) this.y -= this.speed;
                 if (keys.Down && this.y < canvas.height - this.height - 20) this.y += this.speed;
                 if (keys.Left && this.x > 20) this.x -= this.speed;
                 if (keys.Right && this.x < canvas.width - this.width - 20) this.x += this.speed;
+
+                // Smooth Touch Drag Interpolation
+                if (this.targetY !== undefined) {
+                    this.y += (this.targetY - this.y) * 0.25;
+                    this.x += (this.targetX - this.x) * 0.25;
+                }
+
+                // Boundaries
+                this.x = Math.max(15, Math.min(canvas.width - 60, this.x));
+                this.y = Math.max(15, Math.min(canvas.height - 50, this.y));
 
                 if (this.shieldTime > 0) this.shieldTime--;
             }
@@ -925,7 +972,7 @@
             constructor() {
                 this.x = canvas.width + 30;
                 this.y = Math.random() * (canvas.height - 120) + 40;
-                this.speed = Math.random() * 2 + 3 + (level * 0.3);
+                this.speed = Math.random() * 2 + 3 + (level * 0.4);
 
                 const types = [
                     { type: 'ruler', icon: '📏', points: 100 },
@@ -962,12 +1009,16 @@
             }
         }
 
-        // Obstacle Class
+        // Obstacle Class with Progressive Difficulty Scaling ("enna enna amaru wෙනවා")
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
                 this.y = Math.random() * (canvas.height - 140) + 50;
-                this.speed = Math.random() * 2 + 3.5 + (level * 0.5);
+                this.initialY = this.y;
+                
+                // Speed increases progressively per level!
+                const speedMultiplier = 1 + (level * 0.28);
+                this.speed = (Math.random() * 2 + 3.8) * speedMultiplier;
 
                 const obsTypes = ['jellyfish', 'shark', 'plastic'];
                 this.type = obsTypes[Math.floor(Math.random() * obsTypes.length)];
@@ -975,7 +1026,19 @@
                 this.height = 35;
             }
 
-            update() { this.x -= this.speed; }
+            update() {
+                this.x -= this.speed;
+
+                // Jellyfish move up and down in sine waves at Level 3+
+                if (this.type === 'jellyfish' && level >= 3) {
+                    this.y = this.initialY + Math.sin(frameCount * 0.1 + this.x * 0.05) * 45;
+                }
+
+                // Sharks get extra speed bursts at Level 4+
+                if (this.type === 'shark' && level >= 4) {
+                    this.x -= 1.2;
+                }
+            }
 
             draw() {
                 ctx.save();
@@ -983,7 +1046,7 @@
 
                 if (this.type === 'jellyfish') {
                     const pulse = Math.sin(frameCount * 0.15) * 3;
-                    ctx.fillStyle = "rgba(233, 30, 99, 0.85)";
+                    ctx.fillStyle = "rgba(233, 30, 99, 0.88)";
                     ctx.beginPath();
                     ctx.arc(15, 15, 14 + pulse, Math.PI, 0);
                     ctx.fill();
@@ -1086,7 +1149,20 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // Controls
+        // Direct Mobile Touch & Drag Listeners on Canvas
+        function handleTouchMove(e) {
+            if (!gameRunning || !playerObj) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            playerObj.targetX = touch.clientX - rect.left - 25;
+            playerObj.targetY = touch.clientY - rect.top - 18;
+        }
+
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchstart', handleTouchMove, { passive: false });
+
+        // Keyboard Controls
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.Up = true;
             if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.Down = true;
@@ -1181,6 +1257,14 @@
             document.getElementById('hud-level').innerText = level;
         }
 
+        function triggerLevelUpFlare() {
+            const flare = document.getElementById('level-flare');
+            flare.innerText = `LEVEL ${level}! 🚀`;
+            flare.classList.add('active');
+            playSound('levelup');
+            setTimeout(() => flare.classList.remove('active'), 1500);
+        }
+
         async function gameOver() {
             gameRunning = false;
             playSound('hit');
@@ -1193,7 +1277,7 @@
             await saveScore(name, office, dept, score);
 
             document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
-            document.getElementById('gameover-msg').innerText = `Awesome job ${name} (${dept})! Celebrating 29 Years of Riyan Excellence!`;
+            document.getElementById('gameover-msg').innerText = `Awesome job ${name} (${dept})! Reached Level ${level}!`;
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
@@ -1209,10 +1293,20 @@
 
             drawOceanBackground();
 
-            if (frameCount % 60 === 0) items.push(new Item());
-            if (frameCount % Math.max(30, 90 - (level * 10)) === 0) obstacles.push(new Obstacle());
+            // Spawn Items
+            if (frameCount % 55 === 0) items.push(new Item());
 
-            level = Math.floor(score / 1000) + 1;
+            // Progressive Obstacle Spawning Interval ("enna enna amaru wෙනවා")
+            const spawnInterval = Math.max(18, 75 - (level * 8));
+            if (frameCount % spawnInterval === 0) obstacles.push(new Obstacle());
+
+            // Progressive Level Progression (every 800 pts)
+            const newLevel = Math.floor(score / 800) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                triggerLevelUpFlare();
+            }
+
             updateHUD();
 
             playerObj.update();
