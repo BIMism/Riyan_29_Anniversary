@@ -53,6 +53,7 @@
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 188, 212, 0.35);
             border: 2px solid var(--glass-border);
             background: #001219;
+            cursor: crosshair;
         }
 
         canvas {
@@ -79,6 +80,7 @@
             text-align: center;
             z-index: 10;
             overflow-y: auto;
+            cursor: default;
         }
 
         .hidden {
@@ -537,7 +539,7 @@
                 ❤️ Lives: <span id="hud-lives">3</span>
             </div>
             <div class="hud-card">
-                ✨ Level: <span id="hud-level">1</span>
+                ✨ Level: <span id="hud-level">1 / 29</span>
             </div>
         </div>
 
@@ -564,7 +566,7 @@
             </div>
             <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
             <h1 class="game-title">OCEAN QUEST</h1>
-            <p class="subtitle">Type/Select Department • Drag finger or use Arrow keys!</p>
+            <p class="subtitle">Move Mouse on PC or Touch Drag on Mobile to Swim! (Max Level 29)</p>
 
             <!-- Clean Input Fields with Auto-Remember Saved Profile -->
             <div class="input-group">
@@ -615,7 +617,7 @@
                 <div class="logo-emblem">R</div>
                 <div class="logo-text">RIYAN</div>
             </div>
-            <div class="anniversary-badge">🌊 GAME OVER</div>
+            <div class="anniversary-badge" id="gameover-badge">🌊 GAME OVER</div>
             <h1 id="final-score-title" class="game-title">Final Score: 0 Pts</h1>
             <p class="subtitle" id="gameover-msg">Great effort for Riyan 29th Anniversary!</p>
 
@@ -649,25 +651,57 @@
     </div>
 
     <script>
-        // Web Audio Synthesizer
+        // Web Audio Synthesizer (Background Ocean Music, Cheerful Level Up & Sad Game Over Melody)
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
+        let bgMusicTimer = null;
 
         function initAudio() {
             if (!audioCtx) audioCtx = new AudioCtx();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        // Looping Background Ocean Music Synth
+        function startBackgroundMusic() {
+            stopBackgroundMusic();
+            if (!audioCtx) return;
+
+            const notes = [261.63, 329.63, 392.00, 493.88, 523.25]; // C4, E4, G4, B4, C5
+            let noteIdx = 0;
+
+            bgMusicTimer = setInterval(() => {
+                if (!gameRunning) return;
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(notes[noteIdx], audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.6);
+                    noteIdx = (noteIdx + 1) % notes.length;
+                } catch(e){}
+            }, 650);
+        }
+
+        function stopBackgroundMusic() {
+            if (bgMusicTimer) clearInterval(bgMusicTimer);
+            bgMusicTimer = null;
         }
 
         function playSound(type) {
             if (!audioCtx) return;
             try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
                 const now = audioCtx.currentTime;
 
                 if (type === 'collect') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(587.33, now);
                     osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
@@ -676,14 +710,51 @@
                     osc.start(now);
                     osc.stop(now + 0.15);
                 } else if (type === 'shield') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(440, now);
                     osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.3);
-                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.setValueAtTime(0.25, now);
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                     osc.start(now);
                     osc.stop(now + 0.3);
+                } else if (type === 'cake') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.08);
+                    osc.frequency.setValueAtTime(783.99, now + 0.16);
+                    osc.frequency.setValueAtTime(1046.5, now + 0.24);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+                    osc.start(now);
+                    osc.stop(now + 0.45);
+                } else if (type === 'levelup') {
+                    // Cheerful Arpeggio Celebration!
+                    const cheerNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    cheerNotes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + (idx * 0.07));
+                        gain.gain.setValueAtTime(0.25, now + (idx * 0.07));
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.07) + 0.25);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + (idx * 0.07));
+                        osc.stop(now + (idx * 0.07) + 0.25);
+                    });
                 } else if (type === 'hit') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(220, now);
                     osc.frequency.exponentialRampToValueAtTime(80, now + 0.25);
@@ -691,26 +762,37 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                     osc.start(now);
                     osc.stop(now + 0.25);
-                } else if (type === 'cake') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, now);
-                    osc.frequency.setValueAtTime(659.25, now + 0.1);
-                    osc.frequency.setValueAtTime(783.99, now + 0.2);
-                    osc.frequency.setValueAtTime(1046.5, now + 0.3);
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-                    osc.start(now);
-                    osc.stop(now + 0.5);
-                } else if (type === 'levelup') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.setValueAtTime(554.37, now + 0.1);
-                    osc.frequency.setValueAtTime(659.25, now + 0.2);
-                    osc.frequency.setValueAtTime(880, now + 0.3);
-                    gain.gain.setValueAtTime(0.35, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-                    osc.start(now);
-                    osc.stop(now + 0.5);
+                } else if (type === 'gameover_sad') {
+                    // Sad Descending Minor Tune ("duka hithena music")
+                    stopBackgroundMusic();
+                    const sadNotes = [440, 415.30, 392, 349.23, 220]; // A4 -> G#4 -> G4 -> F4 -> A3
+                    sadNotes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(freq, now + (idx * 0.2));
+                        gain.gain.setValueAtTime(0.22, now + (idx * 0.2));
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.2) + 0.4);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + (idx * 0.2));
+                        osc.stop(now + (idx * 0.2) + 0.4);
+                    });
+                } else if (type === 'victory') {
+                    stopBackgroundMusic();
+                    const vicNotes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+                    vicNotes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + (idx * 0.1));
+                        gain.gain.setValueAtTime(0.35, now + (idx * 0.1));
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + (idx * 0.1) + 0.6);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + (idx * 0.1));
+                        osc.stop(now + (idx * 0.1) + 0.6);
+                    });
                 }
             } catch (e) {
                 console.log("Audio error", e);
@@ -744,7 +826,7 @@
         const deptInput = document.getElementById('player-dept');
         const suggestionsBox = document.getElementById('dept-suggestions');
 
-        // Auto-Load Previously Saved Profile on Device! (No re-typing needed!)
+        // Auto-Load Previously Saved Profile on Device!
         const savedName = localStorage.getItem('riyan_saved_player_name');
         const savedDept = localStorage.getItem('riyan_saved_player_dept');
         if (savedName) nameInput.value = savedName;
@@ -775,7 +857,6 @@
             suggestionsBox.style.display = 'block';
         }
 
-        // Show suggestions on click or focus
         deptInput.addEventListener('focus', () => renderSuggestions(deptInput.value));
         deptInput.addEventListener('click', () => renderSuggestions(deptInput.value));
         deptInput.addEventListener('input', () => renderSuggestions(deptInput.value));
@@ -791,6 +872,7 @@
         let score = 0;
         let lives = 3;
         let level = 1;
+        const MAX_LEVEL = 29; // Capped at Level 29 for Riyan 29th Anniversary!
         let frameCount = 0;
         let playerObj = null;
         let items = [];
@@ -827,7 +909,6 @@
         }
 
         async function saveScore(name, dept, scoreVal) {
-            // Save profile locally so they don't have to type again!
             localStorage.setItem('riyan_saved_player_name', name);
             localStorage.setItem('riyan_saved_player_dept', dept);
 
@@ -928,30 +1009,33 @@
 
         renderLeaderboard('leaderboard-list');
 
-        // Player Class (Allows full top to bottom movement!)
+        // Player Class (Allows smooth PC Mouse & Mobile Touch movement!)
         class Player {
             constructor() {
                 this.x = 80;
                 this.y = canvas.height / 2;
                 this.width = 50;
                 this.height = 35;
-                this.speed = 7.5;
+                this.speed = 8.5;
                 this.targetX = this.x;
                 this.targetY = this.y;
                 this.shieldTime = 0;
             }
 
             update() {
+                // Keyboard Arrow Controls
                 if (keys.Up && this.y > 0) this.y -= this.speed;
                 if (keys.Down && this.y < canvas.height - this.height) this.y += this.speed;
                 if (keys.Left && this.x > 0) this.x -= this.speed;
                 if (keys.Right && this.x < canvas.width - this.width) this.x += this.speed;
 
+                // Smooth Mouse (PC) & Touch (Mobile) Target Tracking
                 if (this.targetY !== undefined) {
-                    this.y += (this.targetY - this.y) * 0.28;
-                    this.x += (this.targetX - this.x) * 0.28;
+                    this.y += (this.targetY - this.y) * 0.32;
+                    this.x += (this.targetX - this.x) * 0.32;
                 }
 
+                // Full edge-to-edge canvas boundary clamping!
                 this.x = Math.max(0, Math.min(canvas.width - this.width, this.x));
                 this.y = Math.max(0, Math.min(canvas.height - this.height, this.y));
 
@@ -1191,7 +1275,15 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // Direct Mobile Touch & Drag Listeners
+        // PC Mouse Move Listener (Swimmer follows Mouse Cursor on PC!)
+        canvas.addEventListener('mousemove', (e) => {
+            if (!gameRunning || !playerObj) return;
+            const rect = canvas.getBoundingClientRect();
+            playerObj.targetX = e.clientX - rect.left - 25;
+            playerObj.targetY = e.clientY - rect.top - 18;
+        });
+
+        // Direct Mobile Touch & Drag Listeners (Swimmer follows Finger on Mobile!)
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1233,19 +1325,16 @@
 
         // Start Game Listener
         document.getElementById('start-btn').addEventListener('click', () => {
-            const nameVal = nameInput.value.trim();
-            const deptVal = deptInput.value.trim() || "Architecture & Design";
+            const nameInputVal = nameInput.value.trim();
 
-            if (!nameVal) {
+            if (!nameInputVal) {
                 alert("Please enter your name to join the Riyan 29th Anniversary Quest!");
                 return;
             }
 
-            // Save profile locally!
-            localStorage.setItem('riyan_saved_player_name', nameVal);
-            localStorage.setItem('riyan_saved_player_dept', deptVal);
-
             initAudio();
+            startBackgroundMusic(); // Start Looping Background Ocean Music!
+
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('hud').classList.remove('hidden');
 
@@ -1278,29 +1367,39 @@
         function updateHUD() {
             document.getElementById('hud-score').innerText = score.toLocaleString();
             document.getElementById('hud-lives').innerText = "❤️".repeat(lives);
-            document.getElementById('hud-level').innerText = level;
+            document.getElementById('hud-level').innerText = `${level} / ${MAX_LEVEL}`;
         }
 
         function triggerLevelUpFlare() {
             const flare = document.getElementById('level-flare');
-            flare.innerText = `LEVEL ${level}! 🚀`;
+            flare.innerText = level === MAX_LEVEL ? `🎉 MAX LEVEL ${MAX_LEVEL}! CHAMPION! 🥂` : `LEVEL ${level}! 🚀`;
             flare.classList.add('active');
-            playSound('levelup');
-            setTimeout(() => flare.classList.remove('active'), 1500);
+            playSound(level === MAX_LEVEL ? 'victory' : 'levelup');
+            setTimeout(() => flare.classList.remove('active'), 2000);
         }
 
-        async function gameOver() {
+        async function gameOver(isVictory = false) {
             gameRunning = false;
-            playSound('hit');
+            stopBackgroundMusic();
+
+            if (isVictory) {
+                playSound('victory');
+                document.getElementById('gameover-badge').innerText = "🏆 29th ANNIVERSARY CHAMPION!";
+            } else {
+                playSound('gameover_sad'); // Play Sad Descending Tune!
+                document.getElementById('gameover-badge').innerText = "🌊 GAME OVER";
+            }
 
             const name = nameInput.value.trim();
             const dept = deptInput.value.trim() || "Architecture & Design";
 
-            // Save & sync score online
             await saveScore(name, dept, score);
 
             document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
-            document.getElementById('gameover-msg').innerText = `Awesome job ${name} (${dept})! Reached Level ${level}!`;
+            document.getElementById('gameover-msg').innerText = isVictory ? 
+                `🎉 CONGRATULATIONS ${name}! You completed all 29 Levels for Riyan 29th Anniversary!` :
+                `Awesome effort ${name} (${dept})! Reached Level ${level}!`;
+                
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
@@ -1318,12 +1417,13 @@
 
             if (frameCount % 55 === 0) items.push(new Item());
 
-            const spawnInterval = Math.max(18, 75 - (level * 8));
+            const spawnInterval = Math.max(16, 75 - (level * 2));
             if (frameCount % spawnInterval === 0) obstacles.push(new Obstacle());
 
-            const newLevel = Math.floor(score / 800) + 1;
-            if (newLevel > level) {
-                level = newLevel;
+            // Level progression capped at Max Level 29!
+            const calcLevel = Math.min(MAX_LEVEL, Math.floor(score / 600) + 1);
+            if (calcLevel > level) {
+                level = calcLevel;
                 triggerLevelUpFlare();
             }
 
@@ -1354,6 +1454,12 @@
                     }
                     items.splice(i, 1);
                     updateHUD();
+
+                    // Check for Level 29 victory
+                    if (level === MAX_LEVEL && score >= 17400) {
+                        gameOver(true);
+                        return;
+                    }
                 } else if (it.x < -30) items.splice(i, 1);
             }
 
@@ -1377,7 +1483,7 @@
                         obstacles.splice(i, 1);
 
                         if (lives <= 0) {
-                            gameOver();
+                            gameOver(false); // Game over sad sound
                             return;
                         }
                     }
