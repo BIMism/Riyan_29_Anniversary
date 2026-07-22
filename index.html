@@ -237,7 +237,7 @@
             border: 1.5px solid var(--primary);
             border-radius: 12px;
             margin-top: 4px;
-            max-height: 160px;
+            max-height: 170px;
             overflow-y: auto;
             z-index: 20;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
@@ -564,13 +564,13 @@
             </div>
             <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
             <h1 class="game-title">OCEAN QUEST</h1>
-            <p class="subtitle">Type your Department • Drag finger or use Arrow keys!</p>
+            <p class="subtitle">Type/Select Department • Drag finger or use Arrow keys!</p>
 
-            <!-- Clean Input Fields for Name & Smart Autocomplete Department -->
+            <!-- Clean Input Fields with Auto-Remember Saved Profile -->
             <div class="input-group">
-                <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="20" required>
+                <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="20" spellcheck="false" autocomplete="off" required>
                 
-                <input type="text" id="player-dept" placeholder="Type Your Department (e.g. Architecture...)" autocomplete="off" required>
+                <input type="text" id="player-dept" placeholder="Type or Select Department..." spellcheck="false" autocomplete="off" required>
                 
                 <div id="dept-suggestions"></div>
             </div>
@@ -740,17 +740,19 @@
             "BIM & CAD Team"
         ];
 
+        const nameInput = document.getElementById('player-name');
         const deptInput = document.getElementById('player-dept');
         const suggestionsBox = document.getElementById('dept-suggestions');
 
-        deptInput.addEventListener('input', () => {
-            const val = deptInput.value.trim().toLowerCase();
-            suggestionsBox.innerHTML = '';
+        // Auto-Load Previously Saved Profile on Device! (No re-typing needed!)
+        const savedName = localStorage.getItem('riyan_saved_player_name');
+        const savedDept = localStorage.getItem('riyan_saved_player_dept');
+        if (savedName) nameInput.value = savedName;
+        if (savedDept) deptInput.value = savedDept;
 
-            if (val.length < 1) {
-                suggestionsBox.style.display = 'none';
-                return;
-            }
+        function renderSuggestions(filterVal = "") {
+            suggestionsBox.innerHTML = '';
+            const val = filterVal.trim().toLowerCase();
 
             const matches = knownDepartments.filter(d => d.toLowerCase().includes(val));
 
@@ -771,7 +773,12 @@
             });
 
             suggestionsBox.style.display = 'block';
-        });
+        }
+
+        // Show suggestions on click or focus
+        deptInput.addEventListener('focus', () => renderSuggestions(deptInput.value));
+        deptInput.addEventListener('click', () => renderSuggestions(deptInput.value));
+        deptInput.addEventListener('input', () => renderSuggestions(deptInput.value));
 
         document.addEventListener('click', (e) => {
             if (e.target !== deptInput && e.target !== suggestionsBox) {
@@ -820,6 +827,10 @@
         }
 
         async function saveScore(name, dept, scoreVal) {
+            // Save profile locally so they don't have to type again!
+            localStorage.setItem('riyan_saved_player_name', name);
+            localStorage.setItem('riyan_saved_player_dept', dept);
+
             let lb = getLocalScores();
             
             const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
@@ -941,7 +952,6 @@
                     this.x += (this.targetX - this.x) * 0.28;
                 }
 
-                // Full edge-to-edge boundary clamping!
                 this.x = Math.max(0, Math.min(canvas.width - this.width, this.x));
                 this.y = Math.max(0, Math.min(canvas.height - this.height, this.y));
 
@@ -1181,7 +1191,7 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // Direct Mobile Touch & Drag Listeners (Full Canvas Range)
+        // Direct Mobile Touch & Drag Listeners
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1223,12 +1233,17 @@
 
         // Start Game Listener
         document.getElementById('start-btn').addEventListener('click', () => {
-            const nameInput = document.getElementById('player-name').value.trim();
+            const nameVal = nameInput.value.trim();
+            const deptVal = deptInput.value.trim() || "Architecture & Design";
 
-            if (!nameInput) {
+            if (!nameVal) {
                 alert("Please enter your name to join the Riyan 29th Anniversary Quest!");
                 return;
             }
+
+            // Save profile locally!
+            localStorage.setItem('riyan_saved_player_name', nameVal);
+            localStorage.setItem('riyan_saved_player_dept', deptVal);
 
             initAudio();
             document.getElementById('start-screen').classList.add('hidden');
@@ -1278,8 +1293,8 @@
             gameRunning = false;
             playSound('hit');
 
-            const name = document.getElementById('player-name').value;
-            const dept = document.getElementById('player-dept').value || "Architecture & Design";
+            const name = nameInput.value.trim();
+            const dept = deptInput.value.trim() || "Architecture & Design";
 
             // Save & sync score online
             await saveScore(name, dept, score);
