@@ -572,20 +572,23 @@
             </div>
             <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
             <h1 class="game-title">OCEAN QUEST</h1>
-            <p class="subtitle">Drag finger on mobile or use Arrow keys to swim!</p>
+            <p class="subtitle">Type/Select Department • Drag finger or use Arrow keys!</p>
 
-            <!-- Input Fields for Name, Department & Office Location -->
+            <!-- Input Fields for Name, Department Autocomplete & Office Location -->
             <div class="input-group">
                 <input type="text" id="player-name" class="input-full" placeholder="Enter Your Name..." maxlength="20" required>
                 
-                <select id="player-dept" required>
-                    <option value="Architecture & Design">🏗️ Architecture & Design</option>
-                    <option value="Structural & MEP Engineering">⚙️ Engineering (Structural / MEP)</option>
-                    <option value="Project Management">📋 Project Management</option>
-                    <option value="Quantity Surveying & Cost">📏 Quantity Surveying</option>
-                    <option value="Urban Planning & Research">🏙️ Urban Planning & Research</option>
-                    <option value="Admin & Finance">💼 Admin & Finance</option>
-                </select>
+                <!-- Editable Department Text Input with Autocomplete Datalist -->
+                <input type="text" id="player-dept" list="dept-list" placeholder="Type or Select Department..." required>
+                <datalist id="dept-list">
+                    <option value="Architecture & Design"></option>
+                    <option value="Structural & MEP Engineering"></option>
+                    <option value="Project Management"></option>
+                    <option value="Quantity Surveying & Cost"></option>
+                    <option value="Urban Planning & Research"></option>
+                    <option value="Admin & Finance"></option>
+                    <option value="BIM & CAD Team"></option>
+                </datalist>
 
                 <select id="player-office" required>
                     <option value="Sri Lanka Back Office">🇱🇰 Sri Lanka Back Office (12 Team)</option>
@@ -765,7 +768,6 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        // Clean Reset Leaderboard Key
         const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_v4";
 
         function getLocalScores() {
@@ -841,12 +843,29 @@
             return { name: topDept, score: maxScore };
         }
 
+        function updateDatalistSuggestions(scores) {
+            const datalist = document.getElementById('dept-list');
+            const existingOptions = new Set(Array.from(datalist.options).map(opt => opt.value));
+
+            scores.forEach(entry => {
+                if (entry.dept && !existingOptions.has(entry.dept)) {
+                    existingOptions.add(entry.dept);
+                    const opt = document.createElement('option');
+                    opt.value = entry.dept;
+                    datalist.appendChild(opt);
+                }
+            });
+        }
+
         async function renderLeaderboard(elementId, currentPlayerName) {
             const listEl = document.getElementById(elementId);
             listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading live scores...</div>';
 
             const lb = await fetchGlobalScores();
             listEl.innerHTML = '';
+
+            // Update datalist with custom departments typed by previous players!
+            updateDatalistSuggestions(lb);
 
             const topDept = calculateTopDepartment(lb);
             document.getElementById('top-dept-name').innerText = topDept.name;
@@ -894,19 +913,16 @@
             }
 
             update() {
-                // Keyboard Controls
                 if (keys.Up && this.y > 20) this.y -= this.speed;
                 if (keys.Down && this.y < canvas.height - this.height - 20) this.y += this.speed;
                 if (keys.Left && this.x > 20) this.x -= this.speed;
                 if (keys.Right && this.x < canvas.width - this.width - 20) this.x += this.speed;
 
-                // Smooth Touch Drag Interpolation
                 if (this.targetY !== undefined) {
                     this.y += (this.targetY - this.y) * 0.25;
                     this.x += (this.targetX - this.x) * 0.25;
                 }
 
-                // Boundaries
                 this.x = Math.max(15, Math.min(canvas.width - 60, this.x));
                 this.y = Math.max(15, Math.min(canvas.height - 50, this.y));
 
@@ -917,7 +933,7 @@
                 ctx.save();
                 ctx.translate(this.x, this.y);
 
-                // Body (Team Riyan Wetsuit)
+                // Body
                 ctx.fillStyle = "#00bcd4";
                 ctx.beginPath();
                 ctx.ellipse(25, 18, 22, 12, 0, 0, Math.PI * 2);
@@ -1009,14 +1025,13 @@
             }
         }
 
-        // Obstacle Class with Progressive Difficulty Scaling ("enna enna amaru wෙනවා")
+        // Obstacle Class
         class Obstacle {
             constructor() {
                 this.x = canvas.width + 40;
                 this.y = Math.random() * (canvas.height - 140) + 50;
                 this.initialY = this.y;
                 
-                // Speed increases progressively per level!
                 const speedMultiplier = 1 + (level * 0.28);
                 this.speed = (Math.random() * 2 + 3.8) * speedMultiplier;
 
@@ -1029,12 +1044,10 @@
             update() {
                 this.x -= this.speed;
 
-                // Jellyfish move up and down in sine waves at Level 3+
                 if (this.type === 'jellyfish' && level >= 3) {
                     this.y = this.initialY + Math.sin(frameCount * 0.1 + this.x * 0.05) * 45;
                 }
 
-                // Sharks get extra speed bursts at Level 4+
                 if (this.type === 'shark' && level >= 4) {
                     this.x -= 1.2;
                 }
@@ -1149,7 +1162,7 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // Direct Mobile Touch & Drag Listeners on Canvas
+        // Direct Mobile Touch & Drag Listeners
         function handleTouchMove(e) {
             if (!gameRunning || !playerObj) return;
             e.preventDefault();
@@ -1192,6 +1205,8 @@
         // Start Game Listener
         document.getElementById('start-btn').addEventListener('click', () => {
             const nameInput = document.getElementById('player-name').value.trim();
+            const deptInput = document.getElementById('player-dept').value.trim() || "Architecture & Design";
+
             if (!nameInput) {
                 alert("Please enter your name to join the Riyan 29th Anniversary Quest!");
                 return;
@@ -1224,7 +1239,7 @@
         // Copy Score Listener
         document.getElementById('share-btn').addEventListener('click', () => {
             const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
-            const dept = document.getElementById('player-dept').value;
+            const dept = document.getElementById('player-dept').value || "Architecture & Design";
             const office = document.getElementById('player-office').value;
             const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name}\n🏬 Dept: ${dept} (${office})\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
 
@@ -1236,7 +1251,7 @@
         // Direct Email Score Listener
         document.getElementById('email-btn').addEventListener('click', () => {
             const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
-            const dept = document.getElementById('player-dept').value;
+            const dept = document.getElementById('player-dept').value || "Architecture & Design";
             const office = document.getElementById('player-office').value;
             const subject = encodeURIComponent(`🏆 My Riyan 29th Anniversary Score: ${score.toLocaleString()} Pts - ${name}`);
             const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏬 Department: ${dept}\n🏢 Office: ${office}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
@@ -1270,7 +1285,7 @@
             playSound('hit');
 
             const name = document.getElementById('player-name').value;
-            const dept = document.getElementById('player-dept').value;
+            const dept = document.getElementById('player-dept').value || "Architecture & Design";
             const office = document.getElementById('player-office').value;
 
             // Save & sync score online
@@ -1293,14 +1308,11 @@
 
             drawOceanBackground();
 
-            // Spawn Items
             if (frameCount % 55 === 0) items.push(new Item());
 
-            // Progressive Obstacle Spawning Interval ("enna enna amaru wෙනවා")
             const spawnInterval = Math.max(18, 75 - (level * 8));
             if (frameCount % spawnInterval === 0) obstacles.push(new Obstacle());
 
-            // Progressive Level Progression (every 800 pts)
             const newLevel = Math.floor(score / 800) + 1;
             if (newLevel > level) {
                 level = newLevel;
