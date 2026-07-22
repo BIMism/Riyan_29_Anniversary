@@ -75,7 +75,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 20px 16px;
+            padding: 22px 18px;
             text-align: center;
             z-index: 10;
             overflow-y: auto;
@@ -198,37 +198,29 @@
             margin-bottom: 10px;
             width: 100%;
             max-width: 480px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 8px;
         }
 
-        .input-full {
-            grid-column: span 2;
-        }
-
-        .input-group input, .input-group select {
+        .input-group input {
             width: 100%;
-            padding: 10px 14px;
+            padding: 11px 16px;
             border-radius: 12px;
             border: 2px solid var(--glass-border);
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             outline: none;
             transition: all 0.3s ease;
-        }
-
-        .input-group select option {
-            background: #051923;
-            color: #fff;
+            text-align: center;
         }
 
         .input-group input::placeholder {
             color: #80deea;
         }
 
-        .input-group input:focus, .input-group select:focus {
+        .input-group input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
             background: rgba(255, 255, 255, 0.15);
@@ -525,8 +517,6 @@
             }
             .logo-text { font-size: 1.6rem; }
             h1.game-title { font-size: 1.6rem; }
-            .input-group { grid-template-columns: 1fr; }
-            .input-full { grid-column: span 1; }
             #mobile-controls { display: flex; }
         }
     </style>
@@ -574,11 +564,10 @@
             <h1 class="game-title">OCEAN QUEST</h1>
             <p class="subtitle">Type/Select Department • Drag finger or use Arrow keys!</p>
 
-            <!-- Input Fields for Name, Department Autocomplete & Office Location -->
+            <!-- Clean Input Fields for Name & Department Autocomplete -->
             <div class="input-group">
-                <input type="text" id="player-name" class="input-full" placeholder="Enter Your Name..." maxlength="20" required>
+                <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="20" required>
                 
-                <!-- Editable Department Text Input with Autocomplete Datalist -->
                 <input type="text" id="player-dept" list="dept-list" placeholder="Type or Select Department..." required>
                 <datalist id="dept-list">
                     <option value="Architecture & Design"></option>
@@ -589,11 +578,6 @@
                     <option value="Admin & Finance"></option>
                     <option value="BIM & CAD Team"></option>
                 </datalist>
-
-                <select id="player-office" required>
-                    <option value="Sri Lanka Back Office">🇱🇰 Sri Lanka Back Office (12 Team)</option>
-                    <option value="Maldives HQ">🇲🇻 Maldives HQ</option>
-                </select>
             </div>
 
             <div class="items-guide">
@@ -768,7 +752,7 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_v4";
+        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_v5";
 
         function getLocalScores() {
             const stored = localStorage.getItem(CLOUD_STORAGE_KEY);
@@ -794,17 +778,17 @@
             return getLocalScores();
         }
 
-        async function saveScore(name, office, dept, scoreVal) {
+        async function saveScore(name, dept, scoreVal) {
             let lb = getLocalScores();
             
-            const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase() && item.office === office);
+            const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
             if (existingIdx !== -1) {
                 if (scoreVal > lb[existingIdx].score) {
                     lb[existingIdx].score = scoreVal;
                     lb[existingIdx].dept = dept;
                 }
             } else {
-                lb.push({ name: name, score: scoreVal, office: office, dept: dept });
+                lb.push({ name: name, score: scoreVal, dept: dept });
             }
 
             lb.sort((a, b) => b.score - a.score);
@@ -864,7 +848,6 @@
             const lb = await fetchGlobalScores();
             listEl.innerHTML = '';
 
-            // Update datalist with custom departments typed by previous players!
             updateDatalistSuggestions(lb);
 
             const topDept = calculateTopDepartment(lb);
@@ -881,7 +864,7 @@
             lb.forEach((entry, idx) => {
                 const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
                 const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
-                const deptLabel = entry.dept ? ` • ${entry.dept}` : '';
+                const deptLabel = entry.dept ? entry.dept : 'Team Riyan';
 
                 const row = document.createElement('div');
                 row.className = `lb-row ${isMe ? 'my-score' : ''}`;
@@ -889,7 +872,7 @@
                     <div class="lb-rank ${rankClass}">#${idx + 1}</div>
                     <div class="lb-details">
                         <span class="lb-name">${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
-                        <span class="lb-meta">${entry.office}${deptLabel}</span>
+                        <span class="lb-meta">${deptLabel}</span>
                     </div>
                     <div class="lb-score">${entry.score.toLocaleString()} pts</div>
                 `;
@@ -1205,7 +1188,6 @@
         // Start Game Listener
         document.getElementById('start-btn').addEventListener('click', () => {
             const nameInput = document.getElementById('player-name').value.trim();
-            const deptInput = document.getElementById('player-dept').value.trim() || "Architecture & Design";
 
             if (!nameInput) {
                 alert("Please enter your name to join the Riyan 29th Anniversary Quest!");
@@ -1240,8 +1222,7 @@
         document.getElementById('share-btn').addEventListener('click', () => {
             const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
             const dept = document.getElementById('player-dept').value || "Architecture & Design";
-            const office = document.getElementById('player-office').value;
-            const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name}\n🏬 Dept: ${dept} (${office})\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
+            const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name}\n🏬 Dept: ${dept}\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
 
             navigator.clipboard.writeText(text).then(() => {
                 showToast("Score Copied to Clipboard! Ready to paste in Email/Slack! 🚀");
@@ -1252,9 +1233,8 @@
         document.getElementById('email-btn').addEventListener('click', () => {
             const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
             const dept = document.getElementById('player-dept').value || "Architecture & Design";
-            const office = document.getElementById('player-office').value;
             const subject = encodeURIComponent(`🏆 My Riyan 29th Anniversary Score: ${score.toLocaleString()} Pts - ${name}`);
-            const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏬 Department: ${dept}\n🏢 Office: ${office}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
+            const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏬 Department: ${dept}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
             
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
         });
@@ -1286,10 +1266,9 @@
 
             const name = document.getElementById('player-name').value;
             const dept = document.getElementById('player-dept').value || "Architecture & Design";
-            const office = document.getElementById('player-office').value;
 
             // Save & sync score online
-            await saveScore(name, office, dept, score);
+            await saveScore(name, dept, score);
 
             document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
             document.getElementById('gameover-msg').innerText = `Awesome job ${name} (${dept})! Reached Level ${level}!`;
