@@ -565,10 +565,25 @@
             display: block;
         }
 
+        /* Level Badge in the Middle Column of Leaderboard */
+        .lb-level-badge {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+            font-weight: 800;
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin: 0 8px;
+            white-space: nowrap;
+        }
+
         .lb-score {
             font-weight: 800;
             color: var(--accent);
             font-size: 0.86rem;
+            min-width: 65px;
+            text-align: right;
         }
 
         /* Default PC & General HUD Styling */
@@ -623,7 +638,7 @@
             transform: translate(-50%, -50%) scale(1.2);
         }
 
-        /* MOBILE SPECIFIC RE-RESPONSIVE FIX (Moves HUD safely below mobile browser URL bar!) */
+        /* MOBILE SPECIFIC RE-RESPONSIVE FIX */
         @media (max-width: 768px) {
             #game-wrapper {
                 height: 100vh;
@@ -635,7 +650,6 @@
             .logo-text { font-size: 1.35rem; }
             h1.game-title { font-size: 1.35rem; }
 
-            /* HUD position moved down to 60px so mobile URL bar & status bar never touch it! */
             #hud {
                 top: 65px;
                 left: 6px;
@@ -661,6 +675,12 @@
                 height: 38px;
                 font-size: 1.15rem;
             }
+
+            .lb-level-badge {
+                font-size: 0.65rem;
+                padding: 1px 5px;
+                margin: 0 4px;
+            }
         }
     </style>
 </head>
@@ -669,7 +689,7 @@
     <div id="game-wrapper">
         <canvas id="gameCanvas"></canvas>
 
-        <!-- HUD (Positioned 65px down on mobile so browser bar NEVER cuts it off!) -->
+        <!-- HUD -->
         <div id="hud" class="hidden">
             <div class="hud-card">
                 🏆 Score: <span id="hud-score">0</span>
@@ -1059,7 +1079,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v19";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v20";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -1085,8 +1105,8 @@
             return getLocalScores();
         }
 
-        // Save Score: Updates personal high score AND adds points to Department cumulative totals!
-        async function saveScore(name, pin, dept, avatar, scoreVal) {
+        // Save Score: Updates personal high score & Level reached, and adds points to Department cumulative totals!
+        async function saveScore(name, pin, dept, avatar, scoreVal, levelVal) {
             localStorage.setItem('riyan_saved_player_name', name);
             localStorage.setItem('riyan_saved_player_pin', pin);
             localStorage.setItem('riyan_saved_player_dept', dept);
@@ -1100,12 +1120,15 @@
 
                 if (scoreVal > lb[existingIdx].score) {
                     lb[existingIdx].score = scoreVal;
+                    lb[existingIdx].level = levelVal;
                     lb[existingIdx].dept = dept;
                     lb[existingIdx].avatar = avatar;
                     lb[existingIdx].pin = pin;
+                } else if (!lb[existingIdx].level || levelVal > lb[existingIdx].level) {
+                    lb[existingIdx].level = levelVal;
                 }
             } else {
-                lb.push({ name: name, pin: pin, score: scoreVal, totalDeptScore: scoreVal, dept: dept, avatar: avatar });
+                lb.push({ name: name, pin: pin, score: scoreVal, level: levelVal, totalDeptScore: scoreVal, dept: dept, avatar: avatar });
             }
 
             lb.sort((a, b) => b.score - a.score);
@@ -1157,7 +1180,7 @@
 
         const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
 
-        // Render Individual Leaderboard
+        // Render Individual Leaderboard (Displays Level Reached in the middle column!)
         async function renderLeaderboard(elementId, currentPlayerName, maxCount = null) {
             const listEl = document.getElementById(elementId);
             
@@ -1184,6 +1207,7 @@
                 const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
                 const deptLabel = entry.dept ? entry.dept : 'Team Riyan';
                 const avatarIcon = avatarEmojis[entry.avatar] || '🤿';
+                const lvlNum = entry.level || 1;
 
                 const row = document.createElement('div');
                 row.className = `lb-row ${isMe ? 'my-score' : ''}`;
@@ -1193,6 +1217,7 @@
                         <span class="lb-name">${avatarIcon} ${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
                         <span class="lb-meta">${deptLabel}</span>
                     </div>
+                    <div class="lb-level-badge" title="Highest Level Reached">✨ Lvl ${lvlNum}</div>
                     <div class="lb-score">${entry.score.toLocaleString()} pts</div>
                 `;
                 listEl.appendChild(row);
@@ -1788,7 +1813,7 @@
             const pin = pinInput.value.trim();
             const dept = deptInput.value.trim() || "Design";
 
-            await saveScore(name, pin, dept, selectedAvatar, score);
+            await saveScore(name, pin, dept, selectedAvatar, score, level);
 
             document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
             document.getElementById('gameover-msg').innerText = isVictory ? 
