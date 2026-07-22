@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riyan 29th Anniversary - Ocean Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00bcd4;
+            --primary-dark: #00838f;
+            --accent: #ffd700;
+            --accent-glow: rgba(255, 215, 0, 0.4);
+            --bg-dark: #051923;
+            --glass-bg: rgba(7, 27, 38, 0.92);
+            --glass-border: rgba(0, 188, 212, 0.35);
+            --text-light: #f0f9ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 10%, #003554 0%, #051923 80%);
+            padding: 10px;
+        }
+
+        /* Container */
+        #game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 920px;
+            height: 650px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 188, 212, 0.35);
+            border: 2px solid var(--glass-border);
+            background: #001219;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Screens Overlay */
+        .overlay-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 30px 25px;
+            text-align: center;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Company Brand Header & Logo */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-emblem {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #00bcd4, #005662);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+            border: 1.5px solid #80deea;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #ffffff 0%, #00bcd4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .anniversary-badge {
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            color: #051923;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 5px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px var(--accent-glow);
+            margin-bottom: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #80deea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #b2ebf2;
+            margin-bottom: 18px;
+        }
+
+        /* Inputs & Buttons */
+        .input-group {
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .input-group select option {
+            background: #051923;
+            color: #fff;
+        }
+
+        .input-group input::placeholder {
+            color: #80deea;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            z-index: 2;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 188, 212, 0.6);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #ffd700 0%, #ff9800 100%);
+            color: #051923;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-gold:hover {
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: #80deea;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 188, 212, 0.15);
+            color: #fff;
+        }
+
+        /* Leaderboard Box */
+        .leaderboard-box {
+            background: rgba(5, 22, 33, 0.85);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 480px;
+            padding: 14px 18px;
+            margin-top: 10px;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .leaderboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .leaderboard-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sync-badge {
+            font-size: 0.72rem;
+            background: rgba(0, 188, 212, 0.2);
+            color: #80deea;
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 188, 212, 0.4);
+        }
+
+        .leaderboard-scroll {
+            max-height: 170px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .leaderboard-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .leaderboard-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 10px;
+        }
+
+        .lb-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+
+        .lb-row.my-score {
+            background: rgba(0, 188, 212, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .lb-rank {
+            font-weight: 800;
+            width: 28px;
+            color: #80deea;
+        }
+
+        .lb-rank.gold { color: #ffd700; }
+        .lb-rank.silver { color: #e0e0e0; }
+        .lb-rank.bronze { color: #cd7f32; }
+
+        .lb-details {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lb-name {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .lb-office {
+            font-size: 0.75rem;
+            color: #80deea;
+            display: block;
+        }
+
+        .lb-score {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        /* HUD */
+        #hud {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .hud-card {
+            background: rgba(5, 25, 35, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-card span {
+            color: var(--accent);
+        }
+
+        /* Items Guide */
+        .items-guide {
+            display: flex;
+            gap: 12px;
+            margin: 10px 0 15px 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .guide-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Toast notification */
+        #toast {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2e7d32;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            z-index: 25;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            font-size: 0.95rem;
+        }
+
+        #toast.show {
+            opacity: 1;
+        }
+
+        /* Mobile D-Pad */
+        #mobile-controls {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            display: none;
+            z-index: 5;
+        }
+
+        .d-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 42px);
+            grid-template-rows: repeat(2, 42px);
+            gap: 4px;
+        }
+
+        .d-btn {
+            background: rgba(0, 188, 212, 0.4);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            color: white;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .d-btn:active {
+            background: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            #game-wrapper {
+                height: 96vh;
+                border-radius: 12px;
+            }
+            .logo-text { font-size: 1.8rem; }
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 0.85rem; }
+            #mobile-controls { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="hud-card">
+                🏆 Score: <span id="hud-score">0</span>
+            </div>
+            <div class="hud-card">
+                ❤️ Lives: <span id="hud-lives">3</span>
+            </div>
+            <div class="hud-card">
+                ✨ Level: <span id="hud-level">1</span>
+            </div>
+        </div>
+
+        <!-- Mobile D-Pad -->
+        <div id="mobile-controls">
+            <div class="d-pad">
+                <div></div>
+                <div class="d-btn" id="btn-up">▲</div>
+                <div></div>
+                <div class="d-btn" id="btn-left">◀</div>
+                <div class="d-btn" id="btn-down">▼</div>
+                <div class="d-btn" id="btn-right">▶</div>
+            </div>
+        </div>
+
+        <!-- START SCREEN -->
+        <div id="start-screen" class="overlay-screen">
+            <div class="brand-header">
+                <div class="logo-emblem">R</div>
+                <div class="logo-text">RIYAN</div>
+            </div>
+            <div class="anniversary-badge">🎉 Celebrating 29 Years (1997 - 2026)</div>
+            <h1>OCEAN QUEST</h1>
+            <p class="subtitle">Swim Maldives Seas • Collect Riyan Rulers • Dodge Sea Creatures</p>
+
+            <div class="input-group">
+                <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="18" required>
+                <select id="player-office">
+                    <option value="Sri Lanka Back Office">🇱🇰 Sri Lanka Back Office (12 Team)</option>
+                    <option value="Maldives HQ">🇲🇻 Maldives HQ</option>
+                </select>
+            </div>
+
+            <div class="items-guide">
+                <div class="guide-item">📏 Ruler (+100)</div>
+                <div class="guide-item">🏢 Blueprint (+150)</div>
+                <div class="guide-item">🛡️ ISO Shield (+200)</div>
+                <div class="guide-item">🎂 29th Cake (+500)</div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-gold" id="start-btn">🎮 START SWIMMING</button>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-box">
+                <div class="leaderboard-header">
+                    <div class="leaderboard-title">
+                        <span>🏆 OFFICE HALL OF FAME</span>
+                    </div>
+                    <div class="sync-badge" id="sync-status">⚡ Live Sync</div>
+                </div>
+                <div class="leaderboard-scroll" id="leaderboard-list">
+                    <!-- Dynamic Leaderboard -->
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME OVER SCREEN -->
+        <div id="gameover-screen" class="overlay-screen hidden">
+            <div class="brand-header">
+                <div class="logo-emblem">R</div>
+                <div class="logo-text">RIYAN</div>
+            </div>
+            <div class="anniversary-badge">🌊 GAME OVER</div>
+            <h1 id="final-score-title">Final Score: 0 Pts</h1>
+            <p class="subtitle" id="gameover-msg">Great effort for Riyan 29th Anniversary!</p>
+
+            <div class="btn-container">
+                <button class="btn" id="restart-btn">🔄 PLAY AGAIN</button>
+                <button class="btn btn-gold" id="share-btn">📋 COPY SCORE</button>
+                <button class="btn btn-outline" id="email-btn">✉️ EMAIL SCORE</button>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-box">
+                <div class="leaderboard-header">
+                    <div class="leaderboard-title">
+                        <span>🏆 LEADERBOARD RANKINGS</span>
+                    </div>
+                    <div class="sync-badge">Top Office Scores</div>
+                </div>
+                <div class="leaderboard-scroll" id="gameover-leaderboard-list">
+                    <!-- Dynamic Leaderboard -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast notification -->
+        <div id="toast">Score Copied to Clipboard! Ready to paste in Email/Slack! 🚀</div>
+    </div>
+
+    <script>
+        // Web Audio Synthesizer
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioCtx();
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'collect') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'shield') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.3);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'hit') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(80, now + 0.25);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'cake') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    osc.frequency.setValueAtTime(783.99, now + 0.2);
+                    osc.frequency.setValueAtTime(1046.5, now + 0.3);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                }
+            } catch (e) {
+                console.log("Audio error", e);
+            }
+        }
+
+        // Canvas Setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const wrapper = document.getElementById('game-wrapper');
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Game State
+        let gameRunning = false;
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let frameCount = 0;
+        let playerObj = null;
+        let items = [];
+        let obstacles = [];
+        let particles = [];
+        let bubbles = [];
+
+        const keys = { Up: false, Down: false, Left: false, Right: false };
+
+        // Default Hall of Fame
+        const defaultLeaderboard = [
+            { name: "Kasun (Architect)", score: 4500, office: "Sri Lanka Back Office" },
+            { name: "Maldives HQ Champion", score: 3800, office: "Maldives HQ" },
+            { name: "Nimali (Engineering)", score: 3200, office: "Sri Lanka Back Office" },
+            { name: "Asanka (Lanka Office)", score: 3150, office: "Sri Lanka Back Office" },
+            { name: "Engineer Riyan", score: 2600, office: "Maldives HQ" },
+            { name: "Dilan (Project Mgr)", score: 2100, office: "Sri Lanka Back Office" }
+        ];
+
+        // Online Public Key-Value Sync Storage (Using KeyValue API endpoint)
+        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v1";
+
+        function getLocalScores() {
+            const stored = localStorage.getItem(CLOUD_STORAGE_KEY);
+            return stored ? JSON.parse(stored) : defaultLeaderboard;
+        }
+
+        async function fetchGlobalScores() {
+            try {
+                // Try fetching cloud synced scores if available
+                const res = await fetch(`https://keyvalue.immanuel.co/api/Key/GetValue/${CLOUD_STORAGE_KEY}`);
+                if (res.ok) {
+                    const text = await res.text();
+                    if (text && text !== "null") {
+                        const parsed = JSON.parse(text);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(parsed));
+                            return parsed;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log("Using local cache scores");
+            }
+            return getLocalScores();
+        }
+
+        async function saveScore(name, office, scoreVal) {
+            let lb = getLocalScores();
+            
+            // Check if player already exists, update if score is higher
+            const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase() && item.office === office);
+            if (existingIdx !== -1) {
+                if (scoreVal > lb[existingIdx].score) {
+                    lb[existingIdx].score = scoreVal;
+                }
+            } else {
+                lb.push({ name: name, score: scoreVal, office: office });
+            }
+
+            lb.sort((a, b) => b.score - a.score);
+            lb = lb.slice(0, 15); // Top 15
+
+            localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(lb));
+
+            // Sync to Cloud API asynchronously
+            try {
+                await fetch(`https://keyvalue.immanuel.co/api/Key/PostValue/${CLOUD_STORAGE_KEY}/${encodeURIComponent(JSON.stringify(lb))}`, {
+                    method: 'POST'
+                });
+            } catch (e) {
+                console.log("Cloud sync saved locally");
+            }
+            return lb;
+        }
+
+        async function renderLeaderboard(elementId, currentPlayerName) {
+            const listEl = document.getElementById(elementId);
+            listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading scores...</div>';
+
+            const lb = await fetchGlobalScores();
+            listEl.innerHTML = '';
+
+            lb.forEach((entry, idx) => {
+                const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+                const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
+                
+                const row = document.createElement('div');
+                row.className = `lb-row ${isMe ? 'my-score' : ''}`;
+                row.innerHTML = `
+                    <div class="lb-rank ${rankClass}">#${idx + 1}</div>
+                    <div class="lb-details">
+                        <span class="lb-name">${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
+                        <span class="lb-office">${entry.office}</span>
+                    </div>
+                    <div class="lb-score">${entry.score.toLocaleString()} pts</div>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        renderLeaderboard('leaderboard-list');
+
+        // Player Class
+        class Player {
+            constructor() {
+                this.x = 80;
+                this.y = canvas.height / 2;
+                this.width = 50;
+                this.height = 35;
+                this.speed = 6.5;
+                this.shieldTime = 0;
+            }
+
+            update() {
+                if (keys.Up && this.y > 20) this.y -= this.speed;
+                if (keys.Down && this.y < canvas.height - this.height - 20) this.y += this.speed;
+                if (keys.Left && this.x > 20) this.x -= this.speed;
+                if (keys.Right && this.x < canvas.width - this.width - 20) this.x += this.speed;
+
+                if (this.shieldTime > 0) this.shieldTime--;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+
+                // Body (Team Riyan Wetsuit)
+                ctx.fillStyle = "#00bcd4";
+                ctx.beginPath();
+                ctx.ellipse(25, 18, 22, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Head
+                ctx.fillStyle = "#ffcc80";
+                ctx.beginPath();
+                ctx.arc(42, 14, 9, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Goggles
+                ctx.fillStyle = "#000";
+                ctx.fillRect(40, 10, 8, 7);
+                ctx.fillStyle = "#80deea";
+                ctx.fillRect(42, 11, 5, 5);
+
+                // Flippers
+                ctx.fillStyle = "#ffd700";
+                const kick = Math.sin(frameCount * 0.2) * 5;
+                ctx.beginPath();
+                ctx.moveTo(2, 15);
+                ctx.lineTo(-12, 10 + kick);
+                ctx.lineTo(-12, 25 - kick);
+                ctx.closePath();
+                ctx.fill();
+
+                // Riyan Tank
+                ctx.fillStyle = "#ff9800";
+                ctx.fillRect(10, 5, 16, 6);
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 7px Outfit";
+                ctx.fillText("29th", 11, 10);
+
+                // Shield Aura
+                if (this.shieldTime > 0) {
+                    ctx.strokeStyle = "#ffd700";
+                    ctx.lineWidth = 3;
+                    ctx.shadowColor = "#ffd700";
+                    ctx.shadowBlur = 15;
+                    ctx.beginPath();
+                    ctx.arc(25, 18, 32, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        // Item Class
+        class Item {
+            constructor() {
+                this.x = canvas.width + 30;
+                this.y = Math.random() * (canvas.height - 120) + 40;
+                this.speed = Math.random() * 2 + 3 + (level * 0.3);
+
+                const types = [
+                    { type: 'ruler', icon: '📏', points: 100 },
+                    { type: 'blueprint', icon: '🏢', points: 150 },
+                    { type: 'iso', icon: '🛡️', points: 200 },
+                    { type: 'cake', icon: '🎂', points: 500 }
+                ];
+
+                const rand = Math.random();
+                if (rand < 0.45) this.itemData = types[0];
+                else if (rand < 0.75) this.itemData = types[1];
+                else if (rand < 0.9) this.itemData = types[2];
+                else this.itemData = types[3];
+            }
+
+            update() { this.x -= this.speed; }
+
+            draw() {
+                ctx.save();
+                ctx.font = "26px sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                const bounce = Math.sin(frameCount * 0.1 + this.x) * 4;
+                ctx.fillText(this.itemData.icon, this.x, this.y + bounce);
+
+                ctx.strokeStyle = "rgba(255, 215, 0, 0.4)";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y + bounce, 18, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        // Obstacle Class
+        class Obstacle {
+            constructor() {
+                this.x = canvas.width + 40;
+                this.y = Math.random() * (canvas.height - 140) + 50;
+                this.speed = Math.random() * 2 + 3.5 + (level * 0.5);
+
+                const obsTypes = ['jellyfish', 'shark', 'plastic'];
+                this.type = obsTypes[Math.floor(Math.random() * obsTypes.length)];
+                this.width = this.type === 'shark' ? 65 : 35;
+                this.height = 35;
+            }
+
+            update() { this.x -= this.speed; }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+
+                if (this.type === 'jellyfish') {
+                    const pulse = Math.sin(frameCount * 0.15) * 3;
+                    ctx.fillStyle = "rgba(233, 30, 99, 0.85)";
+                    ctx.beginPath();
+                    ctx.arc(15, 15, 14 + pulse, Math.PI, 0);
+                    ctx.fill();
+
+                    ctx.strokeStyle = "rgba(233, 30, 99, 0.6)";
+                    ctx.lineWidth = 2;
+                    for (let i = 5; i <= 25; i += 5) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 15);
+                        ctx.lineTo(i + Math.sin(frameCount * 0.2 + i) * 4, 32);
+                        ctx.stroke();
+                    }
+                } else if (this.type === 'shark') {
+                    ctx.fillStyle = "#607d8b";
+                    ctx.beginPath();
+                    ctx.ellipse(30, 18, 30, 12, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.moveTo(30, 6);
+                    ctx.lineTo(20, -10);
+                    ctx.lineTo(15, 6);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.moveTo(55, 18);
+                    ctx.lineTo(68, 5);
+                    ctx.lineTo(68, 30);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = "#000";
+                    ctx.beginPath();
+                    ctx.arc(12, 14, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.font = "24px sans-serif";
+                    ctx.fillText("🍾", 10, 20);
+                }
+
+                ctx.restore();
+            }
+        }
+
+        // Bubbles Background
+        class Bubble {
+            constructor() { this.reset(); }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.radius = Math.random() * 5 + 2;
+                this.speed = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random() * 0.4 + 0.1;
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.x += Math.sin(frameCount * 0.05 + this.y) * 0.5;
+                if (this.y < -10) this.reset();
+            }
+
+            draw() {
+                ctx.save();
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 35; i++) bubbles.push(new Bubble());
+
+        // Particles
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = (Math.random() - 0.5) * 8;
+                this.life = 30;
+                this.size = Math.random() * 5 + 3;
+            }
+            update() { this.x += this.vx; this.y += this.vy; this.life--; }
+            draw() {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.life / 30;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createBurst(x, y, color) {
+            for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
+        }
+
+        // Keyboard & Touch Listeners
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.Up = true;
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.Down = true;
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.Left = true;
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.Right = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.Up = false;
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.Down = false;
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.Left = false;
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.Right = false;
+        });
+
+        function bindTouchBtn(btnId, keyName) {
+            const btn = document.getElementById(btnId);
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); keys[keyName] = true; });
+            btn.addEventListener('touchend', (e) => { e.preventDefault(); keys[keyName] = false; });
+            btn.addEventListener('mousedown', () => { keys[keyName] = true; });
+            btn.addEventListener('mouseup', () => { keys[keyName] = false; });
+        }
+        bindTouchBtn('btn-up', 'Up');
+        bindTouchBtn('btn-down', 'Down');
+        bindTouchBtn('btn-left', 'Left');
+        bindTouchBtn('btn-right', 'Right');
+
+        // Start Game Listener
+        document.getElementById('start-btn').addEventListener('click', () => {
+            const nameInput = document.getElementById('player-name').value.trim();
+            if (!nameInput) {
+                alert("Please enter your name to join the Riyan 29th Anniversary Quest!");
+                return;
+            }
+
+            initAudio();
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('hud').classList.remove('hidden');
+
+            playerObj = new Player();
+            score = 0;
+            lives = 3;
+            level = 1;
+            items = [];
+            obstacles = [];
+            particles = [];
+            gameRunning = true;
+
+            updateHUD();
+            gameLoop();
+        });
+
+        // Restart Listener
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            document.getElementById('gameover-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            renderLeaderboard('leaderboard-list');
+        });
+
+        // Copy Score Listener
+        document.getElementById('share-btn').addEventListener('click', () => {
+            const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
+            const office = document.getElementById('player-office').value;
+            const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name} (${office})\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Score Copied to Clipboard! Ready to paste in Email/Slack! 🚀");
+            });
+        });
+
+        // Direct Email Score Listener
+        document.getElementById('email-btn').addEventListener('click', () => {
+            const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
+            const office = document.getElementById('player-office').value;
+            const subject = encodeURIComponent(`🏆 My Riyan 29th Anniversary Score: ${score.toLocaleString()} Pts - ${name}`);
+            const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏢 Office: ${office}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
+            
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function updateHUD() {
+            document.getElementById('hud-score').innerText = score.toLocaleString();
+            document.getElementById('hud-lives').innerText = "❤️".repeat(lives);
+            document.getElementById('hud-level').innerText = level;
+        }
+
+        async function gameOver() {
+            gameRunning = false;
+            playSound('hit');
+
+            const name = document.getElementById('player-name').value;
+            const office = document.getElementById('player-office').value;
+
+            // Save & sync score online
+            await saveScore(name, office, score);
+
+            document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
+            document.getElementById('gameover-msg').innerText = `Awesome job ${name}! Celebrating 29 Years of Riyan Excellence!`;
+            document.getElementById('hud').classList.add('hidden');
+            document.getElementById('gameover-screen').classList.remove('hidden');
+
+            renderLeaderboard('gameover-leaderboard-list', name);
+        }
+
+        // Game Loop
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            frameCount++;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawOceanBackground();
+
+            if (frameCount % 60 === 0) items.push(new Item());
+            if (frameCount % Math.max(30, 90 - (level * 10)) === 0) obstacles.push(new Obstacle());
+
+            level = Math.floor(score / 1000) + 1;
+            updateHUD();
+
+            playerObj.update();
+            playerObj.draw();
+
+            // Items
+            for (let i = items.length - 1; i >= 0; i--) {
+                const it = items[i];
+                it.update();
+                it.draw();
+
+                const dist = Math.hypot((it.x) - (playerObj.x + 25), (it.y) - (playerObj.y + 18));
+                if (dist < 35) {
+                    score += it.itemData.points;
+                    if (it.itemData.type === 'iso') {
+                        playerObj.shieldTime = 300;
+                        playSound('shield');
+                        createBurst(it.x, it.y, '#ffd700');
+                    } else if (it.itemData.type === 'cake') {
+                        playSound('cake');
+                        createBurst(it.x, it.y, '#ff4081');
+                    } else {
+                        playSound('collect');
+                        createBurst(it.x, it.y, '#00bcd4');
+                    }
+                    items.splice(i, 1);
+                    updateHUD();
+                } else if (it.x < -30) items.splice(i, 1);
+            }
+
+            // Obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.update();
+                obs.draw();
+
+                const dist = Math.hypot((obs.x + obs.width/2) - (playerObj.x + 25), (obs.y + obs.height/2) - (playerObj.y + 18));
+                if (dist < 32) {
+                    if (playerObj.shieldTime > 0) {
+                        createBurst(obs.x, obs.y, '#ffd700');
+                        playSound('shield');
+                        obstacles.splice(i, 1);
+                    } else {
+                        createBurst(playerObj.x + 25, playerObj.y + 18, '#ff5252');
+                        playSound('hit');
+                        lives--;
+                        updateHUD();
+                        obstacles.splice(i, 1);
+
+                        if (lives <= 0) {
+                            gameOver();
+                            return;
+                        }
+                    }
+                } else if (obs.x < -70) obstacles.splice(i, 1);
+            }
+
+            // Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function drawOceanBackground() {
+            ctx.save();
+            ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(canvas.width - (i * 120), 0);
+                ctx.lineTo(canvas.width - (i * 180) - 100, canvas.height);
+                ctx.lineTo(canvas.width - (i * 180) - 40, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+            }
+            ctx.restore();
+
+            bubbles.forEach(b => { b.update(); b.draw(); });
+
+            ctx.save();
+            ctx.fillStyle = "#002b36";
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height);
+            ctx.quadraticCurveTo(canvas.width * 0.2, canvas.height - 40, canvas.width * 0.5, canvas.height - 15);
+            ctx.quadraticCurveTo(canvas.width * 0.8, canvas.height - 50, canvas.width, canvas.height - 10);
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = "#004d40";
+            ctx.beginPath();
+            ctx.arc(100, canvas.height - 10, 25, 0, Math.PI * 2);
+            ctx.arc(350, canvas.height - 5, 30, 0, Math.PI * 2);
+            ctx.arc(700, canvas.height - 15, 35, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    </script>
+</body>
+</html>
