@@ -76,7 +76,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 22px 18px;
+            padding: 18px 16px;
             text-align: center;
             z-index: 10;
             overflow-y: auto;
@@ -93,26 +93,26 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .logo-emblem {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #00bcd4, #005662);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #fff;
-            box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
             border: 1.5px solid #80deea;
         }
 
         .logo-text {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             letter-spacing: 3px;
             background: linear-gradient(135deg, #ffffff 0%, #00bcd4 100%);
@@ -125,13 +125,13 @@
             background: linear-gradient(135deg, #ffd700, #ff9800);
             color: #051923;
             font-weight: 800;
-            font-size: 0.8rem;
-            padding: 4px 16px;
+            font-size: 0.76rem;
+            padding: 3px 14px;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
             box-shadow: 0 0 15px var(--accent-glow);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             animation: pulse 2s infinite;
         }
 
@@ -141,19 +141,62 @@
         }
 
         h1.game-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             background: linear-gradient(135deg, #ffffff 0%, #80deea 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             letter-spacing: 1px;
         }
 
         .subtitle {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #b2ebf2;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+        }
+
+        /* Avatar Selection Grid */
+        .avatar-section-title {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .avatar-grid {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .avatar-card {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .avatar-card:hover {
+            transform: scale(1.08);
+            border-color: var(--primary);
+        }
+
+        .avatar-card.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+            transform: scale(1.1);
         }
 
         /* Highlighted Top Department Banner */
@@ -161,10 +204,10 @@
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.25));
             border: 1.5px solid #ffd700;
             border-radius: 14px;
-            padding: 8px 14px;
+            padding: 6px 12px;
             width: 100%;
             max-width: 480px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -176,7 +219,7 @@
         }
 
         .dept-highlight-title {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: #ffd700;
             font-weight: 800;
             text-transform: uppercase;
@@ -184,40 +227,48 @@
         }
 
         .dept-highlight-name {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: #fff;
         }
 
         .dept-highlight-score {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 900;
             color: #ffd700;
         }
 
         /* Inputs & Buttons */
         .input-group {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             width: 100%;
             max-width: 480px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             position: relative;
         }
 
-        .input-group input {
+        .input-row {
+            display: flex;
+            gap: 6px;
             width: 100%;
-            padding: 11px 16px;
+        }
+
+        .input-group input {
+            padding: 9px 14px;
             border-radius: 12px;
             border: 2px solid var(--glass-border);
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             outline: none;
             transition: all 0.3s ease;
             text-align: center;
         }
+
+        #player-name { flex: 2; }
+        #player-pin { flex: 1; }
 
         .input-group input::placeholder {
             color: #80deea;
@@ -239,7 +290,7 @@
             border: 1.5px solid var(--primary);
             border-radius: 12px;
             margin-top: 4px;
-            max-height: 170px;
+            max-height: 160px;
             overflow-y: auto;
             z-index: 20;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
@@ -247,9 +298,9 @@
         }
 
         .suggestion-item {
-            padding: 9px 14px;
+            padding: 8px 12px;
             text-align: left;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: #e0f7fa;
             cursor: pointer;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -267,19 +318,19 @@
 
         .btn-container {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 10px 0;
+            margin: 6px 0;
             z-index: 2;
         }
 
         .btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
-            padding: 11px 28px;
+            padding: 10px 24px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -312,8 +363,8 @@
             border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 10px 14px;
-            margin-top: 5px;
+            padding: 8px 12px;
+            margin-top: 4px;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
@@ -322,12 +373,12 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(0, 188, 212, 0.2);
-            padding-bottom: 6px;
-            margin-bottom: 6px;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
         }
 
         .leaderboard-title {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 800;
             color: var(--accent);
             display: flex;
@@ -336,22 +387,22 @@
         }
 
         .sync-badge {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             background: rgba(0, 188, 212, 0.2);
             color: #80deea;
-            padding: 3px 8px;
+            padding: 2px 7px;
             border-radius: 10px;
             border: 1px solid rgba(0, 188, 212, 0.4);
         }
 
         .leaderboard-scroll {
-            max-height: 145px;
+            max-height: 130px;
             overflow-y: auto;
             padding-right: 4px;
         }
 
         .leaderboard-scroll::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
 
         .leaderboard-scroll::-webkit-scrollbar-thumb {
@@ -363,11 +414,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.86rem;
+            font-size: 0.84rem;
             border-radius: 8px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .lb-row.my-score {
@@ -377,7 +428,7 @@
 
         .lb-rank {
             font-weight: 800;
-            width: 26px;
+            width: 24px;
             color: #80deea;
         }
 
@@ -388,7 +439,7 @@
         .lb-details {
             flex-grow: 1;
             text-align: left;
-            padding-left: 8px;
+            padding-left: 6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -400,7 +451,7 @@
         }
 
         .lb-meta {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #80deea;
             display: block;
         }
@@ -408,7 +459,7 @@
         .lb-score {
             font-weight: 800;
             color: var(--accent);
-            font-size: 0.92rem;
+            font-size: 0.88rem;
         }
 
         /* HUD */
@@ -462,25 +513,6 @@
             transform: translate(-50%, -50%) scale(1.2);
         }
 
-        /* Items Guide */
-        .items-guide {
-            display: flex;
-            gap: 8px;
-            margin: 4px 0 8px 0;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 0.78rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .guide-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
         /* Mobile D-Pad & Touch Guide */
         #mobile-controls {
             position: absolute;
@@ -519,8 +551,8 @@
                 height: 98vh;
                 border-radius: 12px;
             }
-            .logo-text { font-size: 1.6rem; }
-            h1.game-title { font-size: 1.6rem; }
+            .logo-text { font-size: 1.5rem; }
+            h1.game-title { font-size: 1.5rem; }
             #mobile-controls { display: flex; }
         }
     </style>
@@ -566,22 +598,28 @@
             </div>
             <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
             <h1 class="game-title">OCEAN QUEST</h1>
-            <p class="subtitle">Move Mouse on PC or Touch Drag on Mobile to Swim! (Max Level 29)</p>
+            <p class="subtitle">Protected Profile • Choose Your Swimmer Face Avatar!</p>
 
-            <!-- Clean Input Fields with Auto-Remember Saved Profile -->
+            <!-- Avatar Face Picker -->
+            <div class="avatar-section-title">CHOOSE SWIMMER AVATAR FACE</div>
+            <div class="avatar-grid">
+                <div class="avatar-card selected" data-avatar="classic" title="Classic Diver">🤿</div>
+                <div class="avatar-card" data-avatar="female" title="Aqua Female Diver">👱‍♀️</div>
+                <div class="avatar-card" data-avatar="beard" title="Pro Captain">🧔</div>
+                <div class="avatar-card" data-avatar="cool" title="Cool Shades">🕶️</div>
+                <div class="avatar-card" data-avatar="bim" title="BIM Engineer">👷</div>
+            </div>
+
+            <!-- Profile Inputs: Username + 4-digit PIN + Department -->
             <div class="input-group">
-                <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="20" spellcheck="false" autocomplete="off" required>
+                <div class="input-row">
+                    <input type="text" id="player-name" placeholder="Enter Username..." maxlength="20" spellcheck="false" autocomplete="off" required>
+                    <input type="password" id="player-pin" placeholder="4-Digit PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric" required>
+                </div>
                 
                 <input type="text" id="player-dept" placeholder="Type or Select Department..." spellcheck="false" autocomplete="off" required>
                 
                 <div id="dept-suggestions"></div>
-            </div>
-
-            <div class="items-guide">
-                <div class="guide-item">📏 Ruler (+100)</div>
-                <div class="guide-item">🏢 Blueprint (+150)</div>
-                <div class="guide-item">🛡️ ISO Shield (+200)</div>
-                <div class="guide-item">🎂 29th Cake (+500)</div>
             </div>
 
             <div class="btn-container">
@@ -821,13 +859,36 @@
         ];
 
         const nameInput = document.getElementById('player-name');
+        const pinInput = document.getElementById('player-pin');
         const deptInput = document.getElementById('player-dept');
         const suggestionsBox = document.getElementById('dept-suggestions');
 
+        // Avatar Selection Logic
+        let selectedAvatar = 'classic';
+        const avatarCards = document.querySelectorAll('.avatar-card');
+        avatarCards.forEach(card => {
+            card.addEventListener('click', () => {
+                avatarCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedAvatar = card.getAttribute('data-avatar');
+            });
+        });
+
+        // Auto-Load Previously Saved Profile on Device
         const savedName = localStorage.getItem('riyan_saved_player_name');
+        const savedPin = localStorage.getItem('riyan_saved_player_pin');
         const savedDept = localStorage.getItem('riyan_saved_player_dept');
+        const savedAvatar = localStorage.getItem('riyan_saved_player_avatar');
+
         if (savedName) nameInput.value = savedName;
+        if (savedPin) pinInput.value = savedPin;
         if (savedDept) deptInput.value = savedDept;
+        if (savedAvatar) {
+            selectedAvatar = savedAvatar;
+            avatarCards.forEach(c => {
+                c.classList.toggle('selected', c.getAttribute('data-avatar') === savedAvatar);
+            });
+        }
 
         function renderSuggestions(filterVal = "") {
             suggestionsBox.innerHTML = '';
@@ -879,9 +940,8 @@
 
         const keys = { Up: false, Down: false, Left: false, Right: false };
 
-        // Highly-Reliable Public Global REST Storage for Real-Time Cross-Browser Sync!
         const GLOBAL_API_ENDPOINT = "https://api.npoint.io/46944e803362a74c2d3b";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v6";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v7";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -904,9 +964,11 @@
             return getLocalScores();
         }
 
-        async function saveScore(name, dept, scoreVal) {
+        async function saveScore(name, pin, dept, avatar, scoreVal) {
             localStorage.setItem('riyan_saved_player_name', name);
+            localStorage.setItem('riyan_saved_player_pin', pin);
             localStorage.setItem('riyan_saved_player_dept', dept);
+            localStorage.setItem('riyan_saved_player_avatar', avatar);
 
             let lb = await fetchGlobalScores();
             
@@ -915,13 +977,14 @@
                 if (scoreVal > lb[existingIdx].score) {
                     lb[existingIdx].score = scoreVal;
                     lb[existingIdx].dept = dept;
+                    lb[existingIdx].avatar = avatar;
                 }
             } else {
-                lb.push({ name: name, score: scoreVal, dept: dept });
+                lb.push({ name: name, pin: pin, score: scoreVal, dept: dept, avatar: avatar });
             }
 
             lb.sort((a, b) => b.score - a.score);
-            lb = lb.slice(0, 20);
+            lb = lb.slice(0, 25);
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lb));
 
@@ -966,6 +1029,8 @@
             });
         }
 
+        const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
+
         async function renderLeaderboard(elementId, currentPlayerName) {
             const listEl = document.getElementById(elementId);
             listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading live scores...</div>';
@@ -990,13 +1055,14 @@
                 const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
                 const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
                 const deptLabel = entry.dept ? entry.dept : 'Team Riyan';
+                const avatarIcon = avatarEmojis[entry.avatar] || '🤿';
 
                 const row = document.createElement('div');
                 row.className = `lb-row ${isMe ? 'my-score' : ''}`;
                 row.innerHTML = `
                     <div class="lb-rank ${rankClass}">#${idx + 1}</div>
                     <div class="lb-details">
-                        <span class="lb-name">${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
+                        <span class="lb-name">${avatarIcon} ${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
                         <span class="lb-meta">${deptLabel}</span>
                     </div>
                     <div class="lb-score">${entry.score.toLocaleString()} pts</div>
@@ -1007,9 +1073,9 @@
 
         renderLeaderboard('leaderboard-list');
 
-        // REALISTIC HUMAN SWIMMER / DIVER CHARACTER ("මිනිහෙක් පීනනවා වගේ")
+        // HUMAN SWIMMER CHARACTER WITH CUSTOM AVATAR FACE
         class Player {
-            constructor() {
+            constructor(avatarType = 'classic') {
                 this.x = 80;
                 this.y = canvas.height / 2;
                 this.width = 60;
@@ -1018,6 +1084,7 @@
                 this.targetX = this.x;
                 this.targetY = this.y;
                 this.shieldTime = 0;
+                this.avatar = avatarType;
             }
 
             update() {
@@ -1044,14 +1111,12 @@
                 const strokeCycle = Math.sin(frameCount * 0.18);
                 const kickCycle = Math.cos(frameCount * 0.22);
 
-                // --- 1. LEG & FLIPPERS KICKING (Back end) ---
-                // Upper Leg
-                ctx.fillStyle = "#ffcc80"; // Skin tone
+                // --- 1. LEG & FLIPPERS KICKING ---
+                ctx.fillStyle = "#ffcc80";
                 ctx.fillRect(-8, 12 + (kickCycle * 3), 16, 6);
                 ctx.fillRect(-8, 18 - (kickCycle * 3), 16, 6);
 
-                // Diving Flippers (Kicking motion)
-                ctx.fillStyle = "#ffd700"; // Gold flippers
+                ctx.fillStyle = "#ffd700";
                 ctx.beginPath();
                 ctx.moveTo(-8, 12 + (kickCycle * 4));
                 ctx.lineTo(-20, 6 + (kickCycle * 8));
@@ -1067,7 +1132,6 @@
                 ctx.fill();
 
                 // --- 2. HUMAN TORSO / SWIMSUIT ---
-                // Team Riyan Wetsuit
                 ctx.fillStyle = "#00bcd4";
                 ctx.beginPath();
                 ctx.roundRect(8, 8, 28, 18, 8);
@@ -1083,42 +1147,85 @@
                 ctx.font = "bold 7px Outfit";
                 ctx.fillText("29th", 16, 8);
 
-                // --- 3. HUMAN HEAD & DIVING MASK ---
-                // Head
-                ctx.fillStyle = "#ffcc80";
+                // --- 3. CUSTOM AVATAR FACE & HEADGEAR ---
+                // Head Skin
+                ctx.fillStyle = this.avatar === 'female' ? '#ffe0b2' : '#ffcc80';
                 ctx.beginPath();
                 ctx.arc(42, 16, 8, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Hair / Swim Cap
-                ctx.fillStyle = "#3e2723";
-                ctx.beginPath();
-                ctx.arc(40, 14, 8, Math.PI * 0.8, Math.PI * 1.9);
-                ctx.fill();
+                // Custom Hair / Headgear per Avatar
+                if (this.avatar === 'female') {
+                    // Blonde Hair
+                    ctx.fillStyle = "#ffee58";
+                    ctx.beginPath();
+                    ctx.arc(39, 13, 9, Math.PI * 0.7, Math.PI * 2.1);
+                    ctx.fill();
+                    // Hair ponytail back
+                    ctx.beginPath();
+                    ctx.arc(30, 16, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.avatar === 'beard') {
+                    // Dark Hair + Beard
+                    ctx.fillStyle = "#3e2723";
+                    ctx.beginPath();
+                    ctx.arc(40, 14, 8, Math.PI * 0.8, Math.PI * 1.9);
+                    ctx.fill();
+                    // Beard
+                    ctx.beginPath();
+                    ctx.arc(44, 18, 5, 0, Math.PI);
+                    ctx.fill();
+                } else if (this.avatar === 'cool') {
+                    // Spiky Black Hair
+                    ctx.fillStyle = "#212121";
+                    ctx.beginPath();
+                    ctx.arc(40, 13, 8, Math.PI * 0.8, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.avatar === 'bim') {
+                    // Safety Helmet (Yellow)
+                    ctx.fillStyle = "#ffd700";
+                    ctx.beginPath();
+                    ctx.arc(41, 12, 9, Math.PI, 0);
+                    ctx.fill();
+                    ctx.fillRect(32, 11, 18, 3);
+                } else {
+                    // Classic Swim Cap
+                    ctx.fillStyle = "#00bcd4";
+                    ctx.beginPath();
+                    ctx.arc(40, 14, 8, Math.PI * 0.8, Math.PI * 1.9);
+                    ctx.fill();
+                }
 
-                // Diving Goggles & Snorkel Mask
-                ctx.fillStyle = "#000";
-                ctx.beginPath();
-                ctx.roundRect(40, 12, 8, 7, 2);
-                ctx.fill();
+                // Eye / Goggles / Sunglasses
+                if (this.avatar === 'cool') {
+                    // Cool Sunglasses
+                    ctx.fillStyle = "#000";
+                    ctx.beginPath();
+                    ctx.roundRect(40, 13, 9, 5, 1);
+                    ctx.fill();
+                } else {
+                    // Diving Goggles
+                    ctx.fillStyle = "#000";
+                    ctx.beginPath();
+                    ctx.roundRect(40, 12, 8, 7, 2);
+                    ctx.fill();
 
-                ctx.fillStyle = "#80deea";
-                ctx.beginPath();
-                ctx.roundRect(42, 13, 5, 5, 1);
-                ctx.fill();
+                    ctx.fillStyle = this.avatar === 'female' ? "#80deea" : "#00e5ff";
+                    ctx.beginPath();
+                    ctx.roundRect(42, 13, 5, 5, 1);
+                    ctx.fill();
+                }
 
                 // --- 4. HUMAN ARMS (Swimming Stroke Motion!) ---
-                ctx.strokeStyle = "#ffcc80";
+                ctx.strokeStyle = this.avatar === 'female' ? '#ffe0b2' : '#ffcc80';
                 ctx.lineWidth = 4;
                 ctx.lineCap = "round";
 
-                // Front Arm Stroke
                 ctx.beginPath();
                 ctx.moveTo(32, 12);
                 ctx.lineTo(44 + (strokeCycle * 8), 6 - (strokeCycle * 4));
                 ctx.stroke();
 
-                // Back Arm Stroke
                 ctx.beginPath();
                 ctx.moveTo(28, 20);
                 ctx.lineTo(38 - (strokeCycle * 8), 26 + (strokeCycle * 4));
@@ -1366,12 +1473,28 @@
         bindTouchBtn('btn-left', 'Left');
         bindTouchBtn('btn-right', 'Right');
 
-        // Start Game Listener
-        document.getElementById('start-btn').addEventListener('click', () => {
-            const nameInputVal = nameInput.value.trim();
+        // Start Game Listener with Unique Username & 4-Digit PIN Security
+        document.getElementById('start-btn').addEventListener('click', async () => {
+            const nameVal = nameInput.value.trim();
+            const pinVal = pinInput.value.trim();
+            const deptVal = deptInput.value.trim() || "Architecture & Design";
 
-            if (!nameInputVal) {
-                alert("Please enter your name to join the Riyan 29th Anniversary Quest!");
+            if (!nameVal) {
+                alert("Please enter your Username!");
+                return;
+            }
+
+            if (!pinVal || pinVal.length !== 4 || isNaN(pinVal)) {
+                alert("Please enter a valid 4-Digit PIN (e.g. 1234) to protect your profile!");
+                return;
+            }
+
+            // Verify unique username or PIN match against global list
+            const scores = await fetchGlobalScores();
+            const existingUser = scores.find(u => u.name.toLowerCase() === nameVal.toLowerCase());
+
+            if (existingUser && existingUser.pin && existingUser.pin !== pinVal) {
+                alert(`⚠️ Username "${nameVal}" is already registered by another player!\n\nIf this is your profile, please enter your correct 4-digit PIN.\nOtherwise, please choose a different Username.`);
                 return;
             }
 
@@ -1381,7 +1504,7 @@
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('hud').classList.remove('hidden');
 
-            playerObj = new Player();
+            playerObj = new Player(selectedAvatar);
             score = 0;
             lives = 3;
             level = 1;
@@ -1434,9 +1557,10 @@
             }
 
             const name = nameInput.value.trim();
+            const pin = pinInput.value.trim();
             const dept = deptInput.value.trim() || "Architecture & Design";
 
-            await saveScore(name, dept, score);
+            await saveScore(name, pin, dept, selectedAvatar, score);
 
             document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
             document.getElementById('gameover-msg').innerText = isVictory ? 
