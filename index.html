@@ -6,16 +6,16 @@
     <title>Riyan 29th Anniversary - Ocean Quest</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00bcd4;
             --primary-dark: #00838f;
             --accent: #ffd700;
-            --accent-glow: rgba(255, 215, 0, 0.4);
+            --accent-glow: rgba(255, 215, 0, 0.45);
             --bg-dark: #051923;
-            --glass-bg: rgba(7, 27, 38, 0.92);
-            --glass-border: rgba(0, 188, 212, 0.35);
+            --glass-bg: rgba(6, 24, 34, 0.94);
+            --glass-border: rgba(0, 188, 212, 0.38);
             --text-light: #f0f9ff;
         }
 
@@ -45,7 +45,7 @@
             position: relative;
             width: 100%;
             max-width: 920px;
-            height: 650px;
+            height: 660px;
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 188, 212, 0.35);
@@ -72,7 +72,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 30px 25px;
+            padding: 25px 20px;
             text-align: center;
             z-index: 10;
             overflow-y: auto;
@@ -88,19 +88,19 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .logo-emblem {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, #00bcd4, #005662);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #fff;
             box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
             border: 1.5px solid #80deea;
@@ -108,7 +108,7 @@
 
         .logo-text {
             font-size: 2.2rem;
-            font-weight: 800;
+            font-weight: 900;
             letter-spacing: 3px;
             background: linear-gradient(135deg, #ffffff 0%, #00bcd4 100%);
             -webkit-background-clip: text;
@@ -121,12 +121,12 @@
             color: #051923;
             font-weight: 800;
             font-size: 0.85rem;
-            padding: 5px 16px;
+            padding: 5px 18px;
             border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
             box-shadow: 0 0 15px var(--accent-glow);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             animation: pulse 2s infinite;
         }
 
@@ -135,42 +135,85 @@
             50% { transform: scale(1.04); }
         }
 
-        h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
+        h1.game-title {
+            font-size: 2.2rem;
+            font-weight: 900;
             background: linear-gradient(135deg, #ffffff 0%, #80deea 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
         }
 
         .subtitle {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #b2ebf2;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
+        }
+
+        /* Highlighted Top Department Banner */
+        .dept-highlight-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 152, 0, 0.25));
+            border: 1.5px solid #ffd700;
+            border-radius: 14px;
+            padding: 8px 16px;
+            width: 100%;
+            max-width: 480px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .dept-highlight-info {
+            text-align: left;
+        }
+
+        .dept-highlight-title {
+            font-size: 0.72rem;
+            color: #ffd700;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .dept-highlight-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .dept-highlight-score {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #ffd700;
         }
 
         /* Inputs & Buttons */
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             width: 100%;
-            max-width: 360px;
-            display: flex;
-            flex-direction: column;
+            max-width: 480px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
+        }
+
+        .input-full {
+            grid-column: span 2;
         }
 
         .input-group input, .input-group select {
             width: 100%;
-            padding: 12px 18px;
+            padding: 11px 16px;
             border-radius: 12px;
             border: 2px solid var(--glass-border);
             background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             outline: none;
             transition: all 0.3s ease;
-            text-align: center;
         }
 
         .input-group select option {
@@ -193,7 +236,7 @@
             gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 15px 0;
+            margin: 10px 0;
             z-index: 2;
         }
 
@@ -242,13 +285,13 @@
 
         /* Leaderboard Box */
         .leaderboard-box {
-            background: rgba(5, 22, 33, 0.85);
+            background: rgba(5, 22, 33, 0.88);
             border: 1.5px solid var(--glass-border);
             border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 14px 18px;
-            margin-top: 10px;
+            padding: 12px 16px;
+            margin-top: 5px;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
@@ -257,12 +300,12 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(0, 188, 212, 0.2);
-            padding-bottom: 8px;
-            margin-bottom: 8px;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
         }
 
         .leaderboard-title {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 800;
             color: var(--accent);
             display: flex;
@@ -280,7 +323,7 @@
         }
 
         .leaderboard-scroll {
-            max-height: 170px;
+            max-height: 155px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -298,21 +341,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 7px 10px;
+            padding: 6px 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             border-radius: 8px;
             margin-bottom: 4px;
         }
 
         .lb-row.my-score {
-            background: rgba(0, 188, 212, 0.2);
+            background: rgba(0, 188, 212, 0.22);
             border: 1px solid var(--primary);
         }
 
         .lb-rank {
             font-weight: 800;
-            width: 28px;
+            width: 26px;
             color: #80deea;
         }
 
@@ -334,8 +377,8 @@
             color: #fff;
         }
 
-        .lb-office {
-            font-size: 0.75rem;
+        .lb-meta {
+            font-size: 0.74rem;
             color: #80deea;
             display: block;
         }
@@ -379,12 +422,12 @@
         /* Items Guide */
         .items-guide {
             display: flex;
-            gap: 12px;
-            margin: 10px 0 15px 0;
+            gap: 10px;
+            margin: 6px 0 10px 0;
             background: rgba(255, 255, 255, 0.05);
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 12px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -392,7 +435,7 @@
         .guide-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         /* Toast notification */
@@ -456,9 +499,10 @@
                 height: 96vh;
                 border-radius: 12px;
             }
-            .logo-text { font-size: 1.8rem; }
-            h1 { font-size: 1.8rem; }
-            .subtitle { font-size: 0.85rem; }
+            .logo-text { font-size: 1.7rem; }
+            h1.game-title { font-size: 1.7rem; }
+            .input-group { grid-template-columns: 1fr; }
+            .input-full { grid-column: span 1; }
             #mobile-controls { display: flex; }
         }
     </style>
@@ -499,13 +543,24 @@
                 <div class="logo-emblem">R</div>
                 <div class="logo-text">RIYAN</div>
             </div>
-            <div class="anniversary-badge">🎉 Celebrating 29 Years (1997 - 2026)</div>
-            <h1>OCEAN QUEST</h1>
+            <div class="anniversary-badge">🎉 CELEBRATING 29 YEARS (1997 - 2026)</div>
+            <h1 class="game-title">OCEAN QUEST</h1>
             <p class="subtitle">Swim Maldives Seas • Collect Riyan Rulers • Dodge Sea Creatures</p>
 
+            <!-- Input Fields for Name, Department & Office Location -->
             <div class="input-group">
-                <input type="text" id="player-name" placeholder="Enter Your Name..." maxlength="18" required>
-                <select id="player-office">
+                <input type="text" id="player-name" class="input-full" placeholder="Enter Your Name..." maxlength="20" required>
+                
+                <select id="player-dept" required>
+                    <option value="Architecture & Design">🏗️ Architecture & Design</option>
+                    <option value="Structural & MEP Engineering">⚙️ Engineering (Structural / MEP)</option>
+                    <option value="Project Management">📋 Project Management</option>
+                    <option value="Quantity Surveying & Cost">📏 Quantity Surveying</option>
+                    <option value="Urban Planning & Research">🏙️ Urban Planning & Research</option>
+                    <option value="Admin & Finance">💼 Admin & Finance</option>
+                </select>
+
+                <select id="player-office" required>
                     <option value="Sri Lanka Back Office">🇱🇰 Sri Lanka Back Office (12 Team)</option>
                     <option value="Maldives HQ">🇲🇻 Maldives HQ</option>
                 </select>
@@ -520,6 +575,15 @@
 
             <div class="btn-container">
                 <button class="btn btn-gold" id="start-btn">🎮 START SWIMMING</button>
+            </div>
+
+            <!-- Top Highlighted Department Card -->
+            <div class="dept-highlight-card" id="top-dept-card">
+                <div class="dept-highlight-info">
+                    <div class="dept-highlight-title">👑 LEADING DEPARTMENT</div>
+                    <div class="dept-highlight-name" id="top-dept-name">Architecture & Design</div>
+                </div>
+                <div class="dept-highlight-score" id="top-dept-score">4,500 Pts</div>
             </div>
 
             <!-- Leaderboard -->
@@ -543,13 +607,22 @@
                 <div class="logo-text">RIYAN</div>
             </div>
             <div class="anniversary-badge">🌊 GAME OVER</div>
-            <h1 id="final-score-title">Final Score: 0 Pts</h1>
+            <h1 id="final-score-title" class="game-title">Final Score: 0 Pts</h1>
             <p class="subtitle" id="gameover-msg">Great effort for Riyan 29th Anniversary!</p>
 
             <div class="btn-container">
                 <button class="btn" id="restart-btn">🔄 PLAY AGAIN</button>
                 <button class="btn btn-gold" id="share-btn">📋 COPY SCORE</button>
                 <button class="btn btn-outline" id="email-btn">✉️ EMAIL SCORE</button>
+            </div>
+
+            <!-- Top Department Card -->
+            <div class="dept-highlight-card" id="gameover-top-dept-card">
+                <div class="dept-highlight-info">
+                    <div class="dept-highlight-title">👑 LEADING DEPARTMENT</div>
+                    <div class="dept-highlight-name" id="gameover-top-dept-name">Architecture & Design</div>
+                </div>
+                <div class="dept-highlight-score" id="gameover-top-dept-score">4,500 Pts</div>
             </div>
 
             <!-- Leaderboard -->
@@ -657,16 +730,15 @@
 
         // Default Hall of Fame
         const defaultLeaderboard = [
-            { name: "Kasun (Architect)", score: 4500, office: "Sri Lanka Back Office" },
-            { name: "Maldives HQ Champion", score: 3800, office: "Maldives HQ" },
-            { name: "Nimali (Engineering)", score: 3200, office: "Sri Lanka Back Office" },
-            { name: "Asanka (Lanka Office)", score: 3150, office: "Sri Lanka Back Office" },
-            { name: "Engineer Riyan", score: 2600, office: "Maldives HQ" },
-            { name: "Dilan (Project Mgr)", score: 2100, office: "Sri Lanka Back Office" }
+            { name: "Kasun (Architect)", score: 4500, office: "Sri Lanka Back Office", dept: "Architecture & Design" },
+            { name: "Maldives HQ Champion", score: 3800, office: "Maldives HQ", dept: "Project Management" },
+            { name: "Nimali (Engineering)", score: 3200, office: "Sri Lanka Back Office", dept: "Structural & MEP Engineering" },
+            { name: "Asanka (Lanka Office)", score: 3150, office: "Sri Lanka Back Office", dept: "Architecture & Design" },
+            { name: "Engineer Riyan", score: 2600, office: "Maldives HQ", dept: "Structural & MEP Engineering" },
+            { name: "Dilan (Project Mgr)", score: 2100, office: "Sri Lanka Back Office", dept: "Project Management" }
         ];
 
-        // Online Public Key-Value Sync Storage (Using KeyValue API endpoint)
-        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v1";
+        const CLOUD_STORAGE_KEY = "riyan_29th_anniversary_global_scores_v2";
 
         function getLocalScores() {
             const stored = localStorage.getItem(CLOUD_STORAGE_KEY);
@@ -675,7 +747,6 @@
 
         async function fetchGlobalScores() {
             try {
-                // Try fetching cloud synced scores if available
                 const res = await fetch(`https://keyvalue.immanuel.co/api/Key/GetValue/${CLOUD_STORAGE_KEY}`);
                 if (res.ok) {
                     const text = await res.text();
@@ -693,25 +764,24 @@
             return getLocalScores();
         }
 
-        async function saveScore(name, office, scoreVal) {
+        async function saveScore(name, office, dept, scoreVal) {
             let lb = getLocalScores();
             
-            // Check if player already exists, update if score is higher
             const existingIdx = lb.findIndex(item => item.name.toLowerCase() === name.toLowerCase() && item.office === office);
             if (existingIdx !== -1) {
                 if (scoreVal > lb[existingIdx].score) {
                     lb[existingIdx].score = scoreVal;
+                    lb[existingIdx].dept = dept;
                 }
             } else {
-                lb.push({ name: name, score: scoreVal, office: office });
+                lb.push({ name: name, score: scoreVal, office: office, dept: dept });
             }
 
             lb.sort((a, b) => b.score - a.score);
-            lb = lb.slice(0, 15); // Top 15
+            lb = lb.slice(0, 15);
 
             localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(lb));
 
-            // Sync to Cloud API asynchronously
             try {
                 await fetch(`https://keyvalue.immanuel.co/api/Key/PostValue/${CLOUD_STORAGE_KEY}/${encodeURIComponent(JSON.stringify(lb))}`, {
                     method: 'POST'
@@ -722,6 +792,25 @@
             return lb;
         }
 
+        function calculateTopDepartment(scores) {
+            const deptScores = {};
+            scores.forEach(entry => {
+                const d = entry.dept || "Architecture & Design";
+                if (!deptScores[d]) deptScores[d] = 0;
+                deptScores[d] += entry.score;
+            });
+
+            let topDept = "Architecture & Design";
+            let maxScore = 0;
+            for (const [dept, total] of Object.entries(deptScores)) {
+                if (total > maxScore) {
+                    maxScore = total;
+                    topDept = dept;
+                }
+            }
+            return { name: topDept, score: maxScore };
+        }
+
         async function renderLeaderboard(elementId, currentPlayerName) {
             const listEl = document.getElementById(elementId);
             listEl.innerHTML = '<div style="color:#80deea; padding:10px; font-size:0.85rem;">Loading scores...</div>';
@@ -729,17 +818,25 @@
             const lb = await fetchGlobalScores();
             listEl.innerHTML = '';
 
+            // Update Top Department Card
+            const topDept = calculateTopDepartment(lb);
+            document.getElementById('top-dept-name').innerText = topDept.name;
+            document.getElementById('top-dept-score').innerText = `${topDept.score.toLocaleString()} Pts`;
+            document.getElementById('gameover-top-dept-name').innerText = topDept.name;
+            document.getElementById('gameover-top-dept-score').innerText = `${topDept.score.toLocaleString()} Pts`;
+
             lb.forEach((entry, idx) => {
                 const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
                 const isMe = currentPlayerName && entry.name.toLowerCase() === currentPlayerName.toLowerCase();
-                
+                const deptLabel = entry.dept ? ` • ${entry.dept}` : '';
+
                 const row = document.createElement('div');
                 row.className = `lb-row ${isMe ? 'my-score' : ''}`;
                 row.innerHTML = `
                     <div class="lb-rank ${rankClass}">#${idx + 1}</div>
                     <div class="lb-details">
                         <span class="lb-name">${entry.name} ${isMe ? '⭐ (You)' : ''}</span>
-                        <span class="lb-office">${entry.office}</span>
+                        <span class="lb-meta">${entry.office}${deptLabel}</span>
                     </div>
                     <div class="lb-score">${entry.score.toLocaleString()} pts</div>
                 `;
@@ -989,7 +1086,7 @@
             for (let i = 0; i < 15; i++) particles.push(new Particle(x, y, color));
         }
 
-        // Keyboard & Touch Listeners
+        // Controls
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') keys.Up = true;
             if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') keys.Down = true;
@@ -1051,8 +1148,9 @@
         // Copy Score Listener
         document.getElementById('share-btn').addEventListener('click', () => {
             const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
+            const dept = document.getElementById('player-dept').value;
             const office = document.getElementById('player-office').value;
-            const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name} (${office})\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
+            const text = `🌊 RIYAN 29th Anniversary Ocean Quest 🏆\n👤 Player: ${name}\n🏬 Dept: ${dept} (${office})\n⭐ Score: ${score.toLocaleString()} Pts | Level: ${level}\nCan you beat my high score? Play now! 🚀`;
 
             navigator.clipboard.writeText(text).then(() => {
                 showToast("Score Copied to Clipboard! Ready to paste in Email/Slack! 🚀");
@@ -1062,9 +1160,10 @@
         // Direct Email Score Listener
         document.getElementById('email-btn').addEventListener('click', () => {
             const name = document.getElementById('player-name').value || "Team Riyan Swimmer";
+            const dept = document.getElementById('player-dept').value;
             const office = document.getElementById('player-office').value;
             const subject = encodeURIComponent(`🏆 My Riyan 29th Anniversary Score: ${score.toLocaleString()} Pts - ${name}`);
-            const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏢 Office: ${office}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
+            const body = encodeURIComponent(`Hi Team Riyan,\n\nI played the Riyan 29th Anniversary Ocean Quest!\n\n👤 Player: ${name}\n🏬 Department: ${dept}\n🏢 Office: ${office}\n⭐ Final Score: ${score.toLocaleString()} Pts\n✨ Reached Level: ${level}\n\nCan anyone beat my score? Happy 29th Anniversary Riyan! 🎉`);
             
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
         });
@@ -1087,13 +1186,14 @@
             playSound('hit');
 
             const name = document.getElementById('player-name').value;
+            const dept = document.getElementById('player-dept').value;
             const office = document.getElementById('player-office').value;
 
             // Save & sync score online
-            await saveScore(name, office, score);
+            await saveScore(name, office, dept, score);
 
             document.getElementById('final-score-title').innerText = `Final Score: ${score.toLocaleString()} Pts`;
-            document.getElementById('gameover-msg').innerText = `Awesome job ${name}! Celebrating 29 Years of Riyan Excellence!`;
+            document.getElementById('gameover-msg').innerText = `Awesome job ${name} (${dept})! Celebrating 29 Years of Riyan Excellence!`;
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
