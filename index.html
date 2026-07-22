@@ -672,7 +672,7 @@
 
             <div class="btn-container">
                 <button class="btn btn-gold" id="restart-btn">🔄 PLAY AGAIN</button>
-                <button class="btn btn-outline" id="view-lb-btn">🏆 VIEW FULL RANKINGS (100+)</button>
+                <button class="btn btn-outline" id="view-lb-btn">🏆 CHECK DEPARTMENT SCORES</button>
             </div>
 
             <!-- Top Department Card -->
@@ -684,16 +684,16 @@
                 <div class="dept-highlight-score" id="gameover-top-dept-score">0 Pts</div>
             </div>
 
-            <!-- Leaderboard (Game Over Screen displays ALL RANKINGS 100+) -->
+            <!-- Department Team Standings Box -->
             <div class="leaderboard-box" id="leaderboard-section">
                 <div class="leaderboard-header">
-                    <div class="leaderboard-title">
-                        <span>🏆 ALL OFFICE RANKINGS (100+ PLAYERS)</span>
+                    <div class="leaderboard-title" id="lb-box-title">
+                        <span>🏢 DEPARTMENT TEAM STANDINGS</span>
                     </div>
-                    <div class="sync-badge">Live Office Ranks</div>
+                    <div class="sync-badge">Combined Total Points</div>
                 </div>
                 <div class="leaderboard-scroll" id="gameover-leaderboard-list">
-                    <!-- Dynamic All Rankings (100+) -->
+                    <!-- Dynamic Department Total Scores -->
                 </div>
             </div>
         </div>
@@ -950,7 +950,7 @@
 
         // PERMANENT PUBLIC JSONBLOB ENDPOINT
         const JSONBLOB_URL = "https://jsonblob.com/api/jsonBlob/019f8b03-0c14-72a1-b829-aea61215004e";
-        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v15";
+        const LOCAL_STORAGE_KEY = "riyan_29th_anniversary_global_scores_clean_final_v16";
 
         function getLocalScores() {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -997,7 +997,7 @@
             }
 
             lb.sort((a, b) => b.score - a.score);
-            lb = lb.slice(0, 200); // Stores up to 200 players!
+            lb = lb.slice(0, 200);
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(lb));
 
@@ -1045,8 +1045,8 @@
 
         const avatarEmojis = { classic: '🤿', female: '👱‍♀️', beard: '🧔', cool: '🕶️', bim: '👷' };
 
-        // Render Leaderboard with custom maxCount (e.g. 5 for Start Screen, All 100+ for Game Over!)
-        async function renderLeaderboard(elementId, currentPlayerName, maxCount = null) {
+        // Render Individual Top 5 (for Start Screen)
+        async function renderLeaderboard(elementId, currentPlayerName, maxCount = 5) {
             const listEl = document.getElementById(elementId);
             
             let lb = await fetchGlobalScores();
@@ -1082,6 +1082,49 @@
                         <span class="lb-meta">${deptLabel}</span>
                     </div>
                     <div class="lb-score">${entry.score.toLocaleString()} pts</div>
+                `;
+                listEl.appendChild(row);
+            });
+        }
+
+        // Render Department Wise Combined Rankings (for Game Over Screen!)
+        async function renderDepartmentLeaderboard(elementId) {
+            const listEl = document.getElementById(elementId);
+            let lb = await fetchGlobalScores();
+            listEl.innerHTML = '';
+
+            if (lb.length === 0) {
+                listEl.innerHTML = '<div style="color:#80deea; padding:12px; font-size:0.85rem;">No department scores recorded yet!</div>';
+                return;
+            }
+
+            // Aggregate combined scores and player count per department
+            const deptMap = {};
+            lb.forEach(entry => {
+                const d = entry.dept || "Design";
+                if (!deptMap[d]) {
+                    deptMap[d] = { name: d, totalScore: 0, playerSet: new Set() };
+                }
+                deptMap[d].totalScore += entry.score;
+                deptMap[d].playerSet.add(entry.name.toLowerCase());
+            });
+
+            // Convert to sorted array by combined total score descending
+            const deptList = Object.values(deptMap).sort((a, b) => b.totalScore - a.totalScore);
+
+            deptList.forEach((dept, idx) => {
+                const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+                const playerCount = dept.playerSet.size;
+
+                const row = document.createElement('div');
+                row.className = 'lb-row';
+                row.innerHTML = `
+                    <div class="lb-rank ${rankClass}">#${idx + 1}</div>
+                    <div class="lb-details">
+                        <span class="lb-name">🏢 ${dept.name} ${idx === 0 ? '👑 (Winning)' : ''}</span>
+                        <span class="lb-meta">Team Size: ${playerCount} Swimmer${playerCount > 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="lb-score">${dept.totalScore.toLocaleString()} Pts</div>
                 `;
                 listEl.appendChild(row);
             });
@@ -1532,7 +1575,7 @@
             renderLeaderboard('leaderboard-list', null, 5);
         });
 
-        // View Full Rankings Focus Listener
+        // Check Department Scores Focus Listener
         document.getElementById('view-lb-btn').addEventListener('click', () => {
             const lbEl = document.getElementById('leaderboard-section');
             if (lbEl) lbEl.scrollIntoView({ behavior: 'smooth' });
@@ -1578,8 +1621,8 @@
             document.getElementById('hud').classList.add('hidden');
             document.getElementById('gameover-screen').classList.remove('hidden');
 
-            // Game over screen displays ALL RANKINGS (100+ players!)
-            renderLeaderboard('gameover-leaderboard-list', name, null);
+            // Render Department Combined Standings on Game Over screen!
+            renderDepartmentLeaderboard('gameover-leaderboard-list');
         }
 
         // Game Loop
